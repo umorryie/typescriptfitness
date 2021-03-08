@@ -4,8 +4,9 @@ require('dotenv').config({
 const jwt = require('jsonwebtoken');
 const { config } = require('../config');
 const secret = config.secret;
+import { IUserEmail } from '../interfaces/IUserEmail';
 
-const generateToken = (data) => {
+const generateToken = (data: IUserEmail) => {
     const token = jwt.sign(data, secret, { expiresIn: '1h' });
 
     return token;

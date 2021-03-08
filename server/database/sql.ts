@@ -38,19 +38,19 @@ const createExerciseProgressTable = `
         date datetime
     )`;
 
-const insertUser = (userEmail) => {
+const insertUser = (userEmail: string) => {
     return `insert into users (email) values ('${userEmail}')`;
 };
 
-const insertExercise = (exercise, isCustomExercise) => {
-    return `insert into exercises (name, is_custom_exercise) values ('${exercise}', ${isCustomExercise})`;
+const insertExercise = (exerciseName: string, isCustomExercise: boolean) => {
+    return `insert into exercises (name, is_custom_exercise) values ('${exerciseName}', ${isCustomExercise})`;
 }
 
-const getUserByEmail = (userEmail) => {
+const getUserByEmail = (userEmail: string) => {
     return `select * from users where email = '${userEmail}'`;
 };
 
-const getUsersExercise = (userEmail, exerciseName) => {
+const getUsersExercise = (userEmail: string, exerciseName: string) => {
     return `
     select * from users_exercises ue 
     where ue.user_id = (
@@ -60,11 +60,11 @@ const getUsersExercise = (userEmail, exerciseName) => {
         )`;
 };
 
-const insertUserExercise = (exerciseId, userId) => {
+const insertUserExercise = (exerciseId: number, userId: number) => {
     return `insert into users_exercises (exercise_id, user_id) values ('${exerciseId}', '${userId}')`;
 }
 
-const insertCustomUserExercise = (exerciseName, userEmail) => {
+const insertCustomUserExercise = (exerciseName: string, userEmail: string) => {
     return `
         insert into users_exercises (exercise_id, user_id)
         values (
@@ -73,13 +73,13 @@ const insertCustomUserExercise = (exerciseName, userEmail) => {
         )`;
 }
 
-const insertExerciseProgress = (userExerciseId, sets, reps, weight, weightUnit) => {
+const insertExerciseProgress = (userExerciseId: number, sets: number, reps: number, weight: number, weightUnit: string) => {
     return `
         insert into exercise_progress (user_exercise_id, \`sets\`, reps, weight, weight_unit, date)
         values (${userExerciseId}, ${sets}, ${reps}, ${weight}, '${weightUnit}', NOW())`;
 }
 
-const updateExerciseProgress = (exerciseProgressId, sets, reps, weight, weightUnit) => {
+const updateExerciseProgress = (exerciseProgressId: number, sets: number, reps: number, weight: number, weightUnit: string) => {
     return `
         update exercise_progress
         set \`sets\` = ${sets}, reps = ${reps}, weight = ${weight}, weight_unit = '${weightUnit}'
@@ -87,11 +87,11 @@ const updateExerciseProgress = (exerciseProgressId, sets, reps, weight, weightUn
     `;
 }
 
-const deleteExerciseProgress = (exerciseProgressId) => {
+const deleteExerciseProgress = (exerciseProgressId: number) => {
     return `delete from exercise_progress where id = ${exerciseProgressId}`;
 }
 
-const getAllUsersInformation = (userEmail) => {
+const getAllUsersInformation = (userEmail: string) => {
     return `
     select u.email, e.name as exerciseName, ep.reps, ep.\`sets\`, ep.weight, ep.weight_unit, ep.weight_unit, ep.date, ep.id as exerciseProgressId
     from users u
@@ -107,7 +107,7 @@ const getAllUsersInformation = (userEmail) => {
         where u.email = '${userEmail}'`;
 }
 
-const getExerciseId = (exerciseName) => {
+const getExerciseId = (exerciseName: string) => {
     return `select id from exercises where name = '${exerciseName}'`;
 }
 

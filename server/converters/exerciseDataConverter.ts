@@ -1,4 +1,4 @@
-const convert = (arrayOfExercises, userEmail) => {
+const convert = (arrayOfExercises, userEmail: string) => {
     const response: any = {};
     response.email = userEmail;
     response.exercises = getExercisesKeysObject(arrayOfExercises);
@@ -8,7 +8,7 @@ const convert = (arrayOfExercises, userEmail) => {
 
 const getExercisesKeysObject = (arrayOfExercises) => {
     const exerciseObject = {};
-    const exercisesSet: Set<String> = new Set();
+    const exercisesSet: Set<string> = new Set();
     arrayOfExercises.forEach(element => {
         exercisesSet.add(element.exerciseName);
     })
