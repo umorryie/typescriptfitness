@@ -1,0 +1,387 @@
+{
+    "ARNOLD_PRESS": {
+        "name": "ARNOLD_PRESS",
+        "picture": "",
+        "bodyPart": "shoulders"
+    },
+    "FLAT_BENCH_PRESS": {
+        "name": "FLAT_BENCH_PRESS",
+        "picture": "",
+        "bodyPart": "chest"
+    },
+    "BACK_EXTENSION": {
+        "name": "BACK_EXTENSION",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "BENCH_PRESS": {
+        "name": "BENCH_PRESS",
+        "picture": "",
+        "bodyPart": "chest"
+    },
+    "BICEPS_CURL": {
+        "name": "BICEPS_CURL",
+        "picture": "",
+        "bodyPart": "biceps"
+    },
+    "BURPEE": {
+        "name": "BURPEE",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "CALF_PRESS": {
+        "name": "CALF_PRESS",
+        "picture": "",
+        "bodyPart": "calfs"
+    },
+    "CALF_RAISE": {
+        "name": "CALF_RAISE",
+        "picture": "",
+        "bodyPart": "calfs"
+    },
+    "CHEST_DIP": {
+        "name": "CHEST_DIP",
+        "picture": "",
+        "bodyPart": "chest"
+    },
+    "CHINUP": {
+        "name": "CHINUP",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "CLEAN": {
+        "name": "CLEAN",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "CLEAN_JERK": {
+        "name": "CLEAN_JERK",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "CLOSE_GRIP_BENCH_PRESS": {
+        "name": "CLOSE_GRIP_BENCH_PRESS",
+        "picture": "",
+        "bodyPart": "triceps, shoulders, chest"
+    },
+    "CLOSE_GRIP_PUSHUP": {
+        "name": "CLOSE_GRIP_PUSHUP",
+        "picture": "",
+        "bodyPart": "triceps, shoulders, chest"
+    },
+    "CRUNCH": {
+        "name": "CRUNCH",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "DEADLIFT": {
+        "name": "DEADLIFT",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "DECLINE_BENCH_PRESS": {
+        "name": "DECLINE_BENCH_PRESS",
+        "picture": "",
+        "bodyPart": "triceps, shoulders, chest"
+    },
+    "DIP": {
+        "name": "DIP",
+        "picture": "",
+        "bodyPart": "triceps, shoulders, chest"
+    },
+    "FLY": {
+        "name": "FLY",
+        "picture": "",
+        "bodyPart": "chest"
+    },
+    "FRONT_RAISE": {
+        "name": "FRONT_RAISE",
+        "picture": "",
+        "bodyPart": "shoulders"
+    },
+    "GOOD_MORNING": {
+        "name": "GOOD_MORNING",
+        "picture": "",
+        "bodyPart": "lower back"
+    },
+    "HANG_CLEAN": {
+        "name": "HANG_CLEAN",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "HANG_POWER_CLEAN": {
+        "name": "HANG_POWER_CLEAN",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "HIGH_KNEE_RUN": {
+        "name": "HIGH_KNEE_RUN",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "HIGH_ROW": {
+        "name": "HIGH_ROW",
+        "picture": "",
+        "bodyPart": "back, traps"
+    },
+    "HIP_BRIDGE": {
+        "name": "HIP_BRIDGE",
+        "picture": "",
+        "bodyPart": "glutes, legs"
+    },
+    "HIP_EXTENSION": {
+        "name": "HIP_EXTENSION",
+        "picture": "",
+        "bodyPart": "glutes"
+    },
+    "HIP_RAISE": {
+        "name": "HIP_RAISE",
+        "picture": "",
+        "bodyPart": "glutes"
+    },
+    "HIP_THRUST": {
+        "name": "HIP_THRUST",
+        "picture": "",
+        "bodyPart": "glutes"
+    },
+    "INCLINE_BENCH_PRESS": {
+        "name": "INCLINE_BENCH_PRESS",
+        "picture": "",
+        "bodyPart": "chest"
+    },
+    "JM_PRESS": {
+        "name": "JM_PRESS",
+        "picture": "",
+        "bodyPart": "triceps"
+    },
+    "JUMPING_JACK": {
+        "name": "JUMPING_JACK",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "LATERAL_RAISE": {
+        "name": "LATERAL_RAISE",
+        "picture": "",
+        "bodyPart": "shoulders"
+    },
+    "LEG_CURL": {
+        "name": "LEG_CURL",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "LEG_EXTENSION": {
+        "name": "LEG_EXTENSION",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "LEG_PRESS": {
+        "name": "LEG_PRESS",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "LEG_RAISE": {
+        "name": "LEG_RAISE",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "LUNGE": {
+        "name": "LUNGE",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "MILITARY_PRESS": {
+        "name": "MILITARY_PRESS",
+        "picture": "",
+        "bodyPart": "shoulders"
+    },
+    "PIKE_PRESS": {
+        "name": "PIKE_PRESS",
+        "picture": "",
+        "bodyPart": "shoulders, triceps"
+    },
+    "PIKE_PUSHUP": {
+        "name": "PIKE_PUSHUP",
+        "picture": "",
+        "bodyPart": "chest, shoulder, triceps"
+    },
+    "PLANK": {
+        "name": "PLANK",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "POWER_CLEAN": {
+        "name": "POWER_CLEAN",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "PULLDOWN": {
+        "name": "PULLDOWN",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "PULLOVER": {
+        "name": "PULLOVER",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "PULLUP": {
+        "name": "PULLUP",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "PUSHUP": {
+        "name": "PUSHUP",
+        "picture": "",
+        "bodyPart": "chest, triceps"
+    },
+    "RDL_DEADLIFT": {
+        "name": "RDL_DEADLIFT",
+        "picture": "",
+        "bodyPart": "whole body, back"
+    },
+    "REAR_LATERAL_RAISE": {
+        "name": "REAR_LATERAL_RAISE",
+        "picture": "",
+        "bodyPart": "shoulders"
+    },
+    "REAR_LUNGE": {
+        "name": "REAR_LUNGE",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "RLD_DEADLIFT": {
+        "name": "RLD_DEADLIFT",
+        "picture": "",
+        "bodyPart": "whole body, back"
+    },
+    "ROW": {
+        "name": "ROW",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "RUSSIAN_TWIST": {
+        "name": "RUSSIAN_TWIST",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "SEATED_CALF_RAISE": {
+        "name": "SEATED_CALF_RAISE",
+        "picture": "",
+        "bodyPart": "calfs"
+    },
+    "SHOULDER_PRESS": {
+        "name": "SHOULDER_PRESS",
+        "picture": "",
+        "bodyPart": "shoulders"
+    },
+    "SHRUG": {
+        "name": "SHRUG",
+        "picture": "",
+        "bodyPart": "traps"
+    },
+    "SIDE_LUNGE": {
+        "name": "SIDE_LUNGE",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "SIDE_PLANK": {
+        "name": "SIDE_PLANK",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "SINGLE_LEG_DEADLIFT": {
+        "name": "SINGLE_LEG_DEADLIFT",
+        "picture": "",
+        "bodyPart": "legs, whole body"
+    },
+    "SINGLE_LEG_HIP_BRIDGE": {
+        "name": "SINGLE_LEG_HIP_BRIDGE",
+        "picture": "",
+        "bodyPart": "glutes, abs"
+    },
+    "SITUP": {
+        "name": "SITUP",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "SQUAT": {
+        "name": "SQUAT",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "STANDING_CALF_RAISE": {
+        "name": "STANDING_CALF_RAISE",
+        "picture": "",
+        "bodyPart": "calfs"
+    },
+    "STEP_UP": {
+        "name": "STEP_UP",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "STRAIGHT_LEG_DEADLIFT": {
+        "name": "STRAIGHT_LEG_DEADLIFT",
+        "picture": "",
+        "bodyPart": "legs, whole body"
+    },
+    "SWING": {
+        "name": "SWING",
+        "picture": "",
+        "bodyPart": "whole body"
+    },
+    "THRUSTER": {
+        "name": "THRUSTER",
+        "picture": "",
+        "bodyPart": "whole body, legs, shoulders"
+    },
+    "TRICEPS_DIP": {
+        "name": "TRICEPS_DIP",
+        "picture": "",
+        "bodyPart": "triceps"
+    },
+    "TRICEPS_EXTENSION": {
+        "name": "TRICEPS_EXTENSION",
+        "picture": "",
+        "bodyPart": "triceps"
+    },
+    "TWISTING_CRUNCH": {
+        "name": "TWISTING_CRUNCH",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "TWISTING_SITUP": {
+        "name": "TWISTING_SITUP",
+        "picture": "",
+        "bodyPart": "legs"
+    },
+    "UPRIGHT_ROW": {
+        "name": "UPRIGHT_ROW",
+        "picture": "",
+        "bodyPart": "back"
+    },
+    "V_UPS": {
+        "name": "V_UPS",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "WALL_SIT": {
+        "name": "WALL_SIT",
+        "picture": "",
+        "bodyPart": "abs"
+    },
+    "SPIDER_CURL": {
+        "name": "SPIDER_CURL",
+        "picture": "",
+        "bodyPart": "biceps"
+    },
+    "WRIST_CURL": {
+        "name": "WRIST CURL",
+        "picture": "",
+        "bodyPart": "forearms"
+    },
+    "HAMMER_CURL": {
+        "name": "HAMMER_CURL",
+        "picture": "",
+        "bodyPart": "biceps"
+    }
+}

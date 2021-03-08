@@ -5,7 +5,7 @@ const {validateUserByBody} = require('../validations/validateUser');
 const {validateExercise} = require('../requestMiddleware/validateExercise');
 const {verifyToken} = require('../auth/tokenAuth');
 
-userRouter.get('/user/getUser', verifyToken, getUser);
+userRouter.get('/user/getUser', [verifyToken, validateUserByBody], getUser);
 userRouter.post('/user/create', postUser);
 userRouter.post('/user/postExerciseProgress', [verifyToken, validateUserByBody, validateExercise], postExerciseProgress);
 userRouter.put('/user/update/exercise', [verifyToken, validateUserByBody], modifyExerciseProgress);

@@ -1,47 +1,26 @@
 const fs = require('fs');
+const path = require('path');
 import connection from './connection';
 const {
-    createExerciseProgressTable,
-    createUserExerciseTable,
-    createExerciseTable,
-    createUserTable,
     insertExercise,
     createSchema,
-    selectFitnessSchema
 } = require('./sql');
 
 const getExercises = () => {
-    const exercises = fs.readFileSync('../exercises.json');
+    const exercises = fs.readFileSync('../../server/exercises.json');
     const jsonExercises = JSON.parse(exercises);
     return Object.keys(jsonExercises);
 }
 
 const setUpTables = async (dbConnection) => {
     try {
-        await dbConnection.query(selectFitnessSchema, (error, result) => {
+        const file = fs.readFileSync(path.join(__dirname, '../../server/database/createDataBase.sql')).toString();
+
+        await dbConnection.query(file, (error, result) => {
             if (error) {
                 console.log(error)
             }
-        });
-        await dbConnection.query(createUserTable, (error, result) => {
-            if (error) {
-                console.log(error)
-            }
-        });
-        await dbConnection.query(createExerciseTable, (error, result) => {
-            if (error) {
-                console.log(error)
-            }
-        });
-        await dbConnection.query(createUserExerciseTable, (error, result) => {
-            if (error) {
-                console.log(error)
-            }
-        });
-        await dbConnection.query(createExerciseProgressTable, (error, result) => {
-            if (error) {
-                console.log(error)
-            }
+            setUpExercises(dbConnection);
         });
     } catch (error) {
         console.log(`Setting up tables error: ${error}`)
@@ -65,7 +44,6 @@ const setUpExercises = async (dbConnection) => {
 const setUpDataBase = async (dbConnection) => {
     try {
         await setUpTables(dbConnection);
-        await setUpExercises(dbConnection);
     } catch (error) {
         console.log(`Setting up database error: ${error}`)
         return error;
