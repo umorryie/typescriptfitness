@@ -34,12 +34,13 @@ describe('api/user', function () {
             let response = await request(app).get("/api/users/user/getUser").set('Authorization', `Bearer ${token}`);
             response = response.body;
 
+            console.log(response)
             // Assert
             expect(response).not.to.equal(null);
             expect(response.email).to.equal('pesjak.matej@gmail.com');
             expect(response.exercises).not.to.equal(null);
             expect(response.exercises['deadlift']).not.to.equal(null);
-            expect(response.exercises['bench_press:']).not.to.equal(null);
+            expect(response.exercises['bench_press']).not.to.equal(null);
             expect(response.exercises['deadlift'].length).to.equal(1);
             expect(response.exercises['bench_press'].length).to.equal(1);
             expect(response.exercises['bench_press'][0].exerciseInputForTheDay.length).to.equal(1);
@@ -95,7 +96,7 @@ describe('api/user', function () {
             expect(response.email).to.equal('pesjak.matej@gmail.com');
             expect(response.exercises).not.to.equal(null);
             expect(response.exercises['deadlift']).not.to.equal(null);
-            expect(response.exercises['bench_press:']).not.to.equal(null);
+            expect(response.exercises['bench_press']).not.to.equal(null);
             expect(response.exercises['deadlift'].length).to.equal(1);
             expect(response.exercises['bench_press'].length).to.equal(1);
             expect(response.exercises['bench_press'][0].exerciseInputForTheDay.length).to.equal(1);
