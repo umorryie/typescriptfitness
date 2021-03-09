@@ -1,3 +1,5 @@
+CREATE SCHEMA IF NOT EXISTS fitness;
+USE fitness;
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS exercises;
@@ -6,7 +8,7 @@ DROP TABLE IF EXISTS exercise_progress;
 SET FOREIGN_KEY_CHECKS = 1;
 CREATE TABLE users(
         id int not null unique auto_increment,
-        email varchar(255) unique,
+        email varchar(255) unique not null,
         PRIMARY KEY (id)
     );
 CREATE TABLE exercises(

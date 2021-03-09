@@ -79,12 +79,12 @@ const getExerciseId = (exerciseName: string): string => {
 
 export = {
     createSchema,
+    selectFitnessSchema,
+    getExercisesNames,
     insertExercise,
     deleteExerciseProgress,
     insertUser,
     getUserByEmail,
-    selectFitnessSchema,
-    getExercisesNames,
     getUsersExercise,
     insertUserExercise,
     insertExerciseProgress,

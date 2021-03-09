@@ -1,40 +1,32 @@
-const {getExercisesNames, insertExercise, insertCustomUserExercise} = require('../database/sql');
 const connection = require('../database/connection');
+import ExerciseRepository from '../repository/ExerciseRepository';
+const exerciseRepository = new ExerciseRepository(connection);
 
-const getExercises = (req, res) => {
-    connection.query(getExercisesNames, (error, exercises) => {
-        if (error) {
-            console.log(`Error retrieving user with error: ${error}`);
-            res.status(404).json({error})
-        } else {
-            const exercisesArray = exercises.map(exercise => {
-                let exerciseObject = {
-                    name: exercise.name,
-                    isCustomExercise: exercise.isCustomExercise == 0 ? false : true
-                }
-                return exerciseObject;
-            });
-            res.status(200).json(exercisesArray);
-        }
-    });
+const getExercises = async (req, res) => {
+    try {
+        const exercises: any = await exerciseRepository.getExercisesNames();//, (error, exercises) => {
+        const exercisesArray = exercises.map(exercise => {
+            let exerciseObject = {
+                name: exercise.name,
+                isCustomExercise: exercise.isCustomExercise == 0 ? false : true
+            }
+            return exerciseObject;
+        });
+        res.status(200).json(exercisesArray);
+    } catch (error) {
+        res.status(404).json({ error });
+    }
 }
 
-const createNewExercise = (req, res) => {
-    const {exerciseName, userEmail} = req.body;
-    connection.query(insertExercise(exerciseName, true), (error, result) => {
-        if (error) {
-            console.log(`Error inserting exercise: ${exerciseName}`);
-            return res.status(404).json({error});
-        }
-
-        connection.query(insertCustomUserExercise(exerciseName, userEmail), (error, result) => {
-            if (error) {
-                console.log(`Error inserting exerciseUser with user: ${userEmail}, and exercise name: ${exerciseName}`);
-                return res.status(404).json({error});
-            }
-            res.status(202).json(result);
-        })
-    })
+const createNewExercise = async (req, res) => {
+    const { exerciseName, userEmail } = req.body;
+    try {
+        await exerciseRepository.insertExercise(exerciseName, true)
+        const result: any = await exerciseRepository.insertCustomUserExercise(exerciseName, userEmail);
+        res.status(202).json(result);
+    } catch (error) {
+        res.status(404).json({ error });
+    }
 }
 
 export = {
