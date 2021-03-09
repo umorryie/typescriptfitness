@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/server.js",
   "scripts": {
-    "test": "npm run resetTestDatabase && cross-env TEST=test mocha -r ts-node/register server/tests/**/*.test.ts",
+    "test": "npm run resetTestDatabase && cross-env TEST=test mocha -r ts-node/register server/tests/**/*.test.ts --exit",
     "start": "tsc && node dist/server.js",
     "resetTestDatabase": "tsc && node dist/tests/resetTestDatabase.js"
   },
