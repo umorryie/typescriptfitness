@@ -4,12 +4,12 @@ import { expect } from 'chai';
 import fs from 'fs';
 import mysql from 'mysql';
 import path from 'path';
-const testConfig = require('./testDatabaseConfig');
-import ExerciseRepository from '../repository/ExerciseRepository';
-import UserRepository from '../repository/UserRepository';
-import app from '../server';
+const testConfig = require('../testDatabaseConfig');
+import ExerciseRepository from '../../repository/ExerciseRepository';
+import UserRepository from '../../repository/UserRepository';
+import app from '../../server';
 import request = require('supertest');
-const { generateToken } = require('../auth/tokenAuth');
+const { generateToken } = require('../../auth/tokenAuth');
 const token = generateToken({ userEmail: "pesjak.matej@gmail.com" });
 
 describe('api/user', function () {
