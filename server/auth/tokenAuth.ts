@@ -22,14 +22,14 @@ const verifyToken = (req, res, next) => {
                 req.body.userEmail = userEmail;
                 next();
             } else {
-                return res.json("No email specified in token.")
+                return res.status(403).json("No email specified in token.")
             }
         } else {
             return res.status(403).json("No token specified.");
         }
     } catch (error) {
         console.log(`Error with decoding of token with an error: ${error}!`);
-        return res.json({ error });
+        return res.status(403).json({ error });
     }
 
 }
