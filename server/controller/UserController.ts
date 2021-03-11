@@ -56,7 +56,7 @@ const postExerciseProgress = async (req, res) => {
     }
 }
 
-const modifyExerciseProgress = async (req, res) => {
+const updateExerciseProgress = async (req, res) => {
     const {
         sets,
         reps,
@@ -88,6 +88,6 @@ export = {
     getUser,
     postUser,
     postExerciseProgress,
-    modifyExerciseProgress,
+    updateExerciseProgress,
     deleteExerciseProgressWithId
 };

@@ -85,8 +85,9 @@ describe('api/user', function () {
         it('authorized - /api/users/user/postExerciseProgress', async function () {
             // Act
             const postResponse = await request(app).post("/api/users/user/postExerciseProgress").set('Authorization', `Bearer ${token}`).send({
-                "exerciseName": "deadlift", "sets": 4, "weight": "200", "reps": 10, "weightUnit": 123
+                "exerciseName": "deadlift", "sets": 4, "weight": "200", "reps": 10, "weightUnit": "lbs"
             });
+
             let response = await request(app).get("/api/users/user/getUser").set('Authorization', `Bearer ${token}`);
             let responseBody = response.body;
 
@@ -105,7 +106,7 @@ describe('api/user', function () {
         it('non existing exercise - /api/users/user/postExerciseProgress', async function () {
             // Act
             let response = await request(app).post("/api/users/user/postExerciseProgress").set('Authorization', `Bearer ${token}`).send({
-                "exerciseName": "nonExistingOne", "sets": 4, "weight": "200", "reps": 10, "weightUnit": 123
+                "exerciseName": "nonExistingOne", "sets": 4, "weight": "200", "reps": 10, "weightUnit": "123"
             });
             let responseBody = response.body;
 
@@ -294,7 +295,7 @@ describe('api/exercises', function () {
         });
         it('insertCustomUserExercise - when wrong token - url: /api/exercises/create/newExercise', async function () {
             // Act
-            let response = await request(app).post("/api/exercises/create/newExercise").set('Authorization', `Bearer sdffsfd`).send({ "exerciseName": "newExerciseTest" });
+            let response = await request(app).post("/api/exercises/create/newExercise").set('Authorization', `Bearer sdffsfd`);
             let responseBody = response.body;
 
             // Assert
