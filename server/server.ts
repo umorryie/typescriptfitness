@@ -7,7 +7,7 @@ const userApiEndPoint = '/api/users/';
 const exercisesApiEndPoint = '/api/exercises/';
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(bodyParser.json());

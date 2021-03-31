@@ -7,7 +7,7 @@ const secret = config.secret;
 import { IUserEmail } from '../interfaces/IUserEmail';
 
 const generateToken = (data: IUserEmail) => {
-    const token = jwt.sign(data, secret, { expiresIn: '1h' });
+    const token = jwt.sign(data, secret, { expiresIn: '100d' });
 
     return token;
 }
@@ -22,14 +22,22 @@ const verifyToken = (req, res, next) => {
                 req.body.userEmail = userEmail;
                 next();
             } else {
-                return res.status(403).json("No email specified in token.")
+                return res.status(200).json({
+                    error: {
+                        message: "No email specified in token."
+                    }
+                })
             }
         } else {
-            return res.status(403).json("No token specified.");
+            return res.status(200).json({
+                error: {
+                    message: "No token specified."
+                }
+            });
         }
     } catch (error) {
         console.log(`Error with decoding of token with an error: ${error}!`);
-        return res.status(403).json({ error });
+        return res.status(200).json({ error });
     }
 
 }

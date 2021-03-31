@@ -1,6 +1,14 @@
 const { config } = require('../config');
 const mysql = require('mysql');
 let connection;
+const localEnv = {
+    user: 'root',
+    database: 'test',
+    password: 'root',
+    host: 'localhost',
+    port: 3306,
+    multipleStatements: true
+}
 
 if (process.env.TEST === "test") {
     const testDatabaseConfig = require('../tests/testDatabaseConfig');

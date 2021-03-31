@@ -5,7 +5,8 @@ const {
     insertUserExercise,
     insertExerciseProgress,
     updateExerciseProgress,
-    deleteExerciseProgress } = require('../database/sql');
+    deleteExerciseProgress,
+    getUserPassword } = require('../database/sql');
 import { IUserRepository } from '../interfaces/IUserRepository';
 
 export default class UserRepository implements IUserRepository {
@@ -27,9 +28,9 @@ export default class UserRepository implements IUserRepository {
         });
     }
 
-    insertUser(userEmail: string) {
+    insertUser(userEmail: string, password: string) {
         return new Promise((resolve, reject) => {
-            this.db.query(insertUser(userEmail), (error, result) => {
+            this.db.query(insertUser(userEmail, password), (error, result) => {
                 if (error) {
                     console.log(`Error inserting user ${userEmail} with error: ${error}`);
                     return reject(error);
@@ -63,9 +64,9 @@ export default class UserRepository implements IUserRepository {
         });
     }
 
-    updateExerciseProgress(exerciseProgressId: number, sets: number, reps: number, weight: number, weightUnit: string) {
+    updateExerciseProgress(exerciseProgressId: number, sets: number, reps: number, weight: number, weightUnit: string, date: (string | null)) {
         return new Promise((resolve, reject) => {
-            this.db.query(updateExerciseProgress(exerciseProgressId, sets, reps, weight, weightUnit), (error, result) => {
+            this.db.query(updateExerciseProgress(exerciseProgressId, sets, reps, weight, weightUnit, date), (error, result) => {
                 if (error) {
                     console.log(`Error updating progress for exercise with id: ${exerciseProgressId}`);
                     return reject(error);
@@ -87,11 +88,23 @@ export default class UserRepository implements IUserRepository {
         });
     }
 
-    insertExerciseProgress(userExerciseId: number, sets: number, reps: number, weight: number, weightUnit: string) {
+    insertExerciseProgress(userExerciseId: number, sets: number, reps: number, weight: number, weightUnit: string, date: (string | null)) {
         return new Promise((resolve, reject) => {
-            this.db.query(insertExerciseProgress(userExerciseId, sets, reps, weight, weightUnit), (error, result) => {
+            this.db.query(insertExerciseProgress(userExerciseId, sets, reps, weight, weightUnit, date), (error, result) => {
                 if (error) {
                     console.log(`Error inserting users exercises for user with error: ${error}`);
+                    return reject(error);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    getUserPassword(userEmail: string) {
+        return new Promise((resolve, reject) => {
+            this.db.query(getUserPassword(userEmail), (error, result) => {
+                if (error) {
+                    console.log(`Error getting password for user ${userEmail}`);
                     return reject(error);
                 }
                 resolve(result);

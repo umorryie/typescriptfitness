@@ -4,10 +4,13 @@ const selectFitnessSchema: string = 'use fitness;';
 
 const getExercisesNames: string = 'select name, is_custom_exercise as isCustomExercise from exercises;';
 
-const insertUser = (userEmail: string): string => {
-    return `insert into users (email) values ('${userEmail}')`;
+const insertUser = (userEmail: string, password: string): string => {
+    return `insert into users (email, password) values ('${userEmail}', '${password}')`;
 };
 
+const getUserPassword = (userEmail: string): string => {
+    return `select password from users where email = '${userEmail}'`;
+}
 const insertExercise = (exerciseName: string, isCustomExercise: boolean): string => {
     return `insert into exercises (name, is_custom_exercise) values ('${exerciseName}', ${isCustomExercise})`;
 }
@@ -39,16 +42,16 @@ const insertCustomUserExercise = (exerciseName: string, userEmail: string): stri
         )`;
 }
 
-const insertExerciseProgress = (userExerciseId: number, sets: number, reps: number, weight: number, weightUnit: string): string => {
+const insertExerciseProgress = (userExerciseId: number, sets: number, reps: number, weight: number, weightUnit: string, date: (string | null)): string => {
     return `
         insert into exercise_progress (user_exercise_id, \`sets\`, reps, weight, weight_unit, date)
-        values (${userExerciseId}, ${sets}, ${reps}, ${weight}, '${weightUnit}', NOW())`;
+        values (${userExerciseId}, ${sets}, ${reps}, ${weight}, '${weightUnit}', ${date ? `'${date}'` : "NOW()"})`;
 }
 
-const updateExerciseProgress = (exerciseProgressId: number, sets: number, reps: number, weight: number, weightUnit: string): string => {
+const updateExerciseProgress = (exerciseProgressId: number, sets: number, reps: number, weight: number, weightUnit: string, date: (string | null)): string => {
     return `
         update exercise_progress
-        set \`sets\` = ${sets}, reps = ${reps}, weight = ${weight}, weight_unit = '${weightUnit}'
+        set \`sets\` = ${sets}, reps = ${reps}, weight = ${weight}, weight_unit = '${weightUnit}' ${date ? `,date = '${date}'` : ""}
         where id = ${exerciseProgressId}
     `;
 }
@@ -70,7 +73,8 @@ const getAllUsersInformation = (userEmail: string): string => {
         inner join
         exercises e
         on e.id = ue.exercise_id
-        where u.email = '${userEmail}'`;
+        where u.email = '${userEmail}'
+        order by ep.date ASC`;
 }
 
 const getExerciseId = (exerciseName: string): string => {
@@ -91,5 +95,6 @@ export = {
     getAllUsersInformation,
     getExerciseId,
     updateExerciseProgress,
-    insertCustomUserExercise
+    insertCustomUserExercise,
+    getUserPassword
 };

@@ -14,7 +14,7 @@ const getExercises = async (req, res) => {
         });
         res.status(200).json(exercisesArray);
     } catch (error) {
-        res.status(404).json({ error });
+        res.status(200).json({ error });
     }
 }
 
@@ -25,7 +25,7 @@ const createNewExercise = async (req, res) => {
         const result: any = await exerciseRepository.insertCustomUserExercise(exerciseName, userEmail);
         res.status(202).json(result);
     } catch (error) {
-        res.status(404).json({ error });
+        res.status(200).json({ error });
     }
 }
 

@@ -7,23 +7,25 @@ const userEmailSchema = joi.object({
 
 const postExerciseProgressSchema = joi.object({
     exerciseName: joi.string().required(),
-    sets: joi.number().integer().required(),
-    weight: joi.number().integer().required(),
-    reps: joi.number().integer().required(),
+    sets: joi.number().integer().required().min(1),
+    weight: joi.number().integer().required().min(1),
+    reps: joi.number().integer().required().min(1),
     userEmail: joi.string().email().required(),
     weightUnit: joi.string().required(),
     userId: joi.number().integer().required(),
     exerciseId: joi.number().integer().required(),
+    date: joi.string()
 });
 
 const updateExerciseProgressSchema = joi.object({
-    sets: joi.number().integer().required(),
-    weight: joi.number().integer().required(),
-    reps: joi.number().integer().required(),
+    sets: joi.number().integer().required().min(1),
+    weight: joi.number().integer().required().min(1),
+    reps: joi.number().integer().required().min(1),
     weightUnit: joi.string().required(),
     exerciseProgressId: joi.number().integer().required(),
     userEmail: joi.string().email().required(),
     userId: joi.number().integer().required(),
+    date: joi.string()
 });
 
 const deleteExerciseProgressWithIdSchema = joi.object({
@@ -32,8 +34,15 @@ const deleteExerciseProgressWithIdSchema = joi.object({
     userId: joi.number().integer().required(),
 });
 
-const userEmailOnCreate = joi.object({
-    userEmail: joi.string().email().required()
+const userOnCreate = joi.object({
+    userEmail: joi.string().email().required(),
+    password: joi.string().required().min(8),
+    repassword: joi.string().required().min(8),
+});
+
+const userOnLogin = joi.object({
+    userEmail: joi.string().email().required(),
+    password: joi.string().required().min(8)
 });
 
 export {
@@ -41,5 +50,6 @@ export {
     postExerciseProgressSchema,
     updateExerciseProgressSchema,
     deleteExerciseProgressWithIdSchema,
-    userEmailOnCreate
+    userOnCreate,
+    userOnLogin
 }

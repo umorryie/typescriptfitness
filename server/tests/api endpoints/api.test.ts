@@ -30,6 +30,10 @@ describe('api/user', function () {
 
     describe('GET', async function () {
         it('authorized - /api/users/user/getUser', async function () {
+            // Arrange
+            const today: Date = new Date();
+            const year: number = today.getFullYear();
+
             // Act
             let response = await request(app).get("/api/users/user/getUser").set('Authorization', `Bearer ${token}`);
             let responseBody = response.body;
@@ -39,12 +43,16 @@ describe('api/user', function () {
             expect(response.status).to.equal(200);
             expect(responseBody.email).to.equal('pesjak.matej@gmail.com');
             expect(responseBody.exercises).not.to.equal(null);
-            expect(responseBody.exercises['deadlift']).not.to.equal(null);
-            expect(responseBody.exercises['bench_press']).not.to.equal(null);
-            expect(responseBody.exercises['deadlift'].length).to.equal(1);
-            expect(responseBody.exercises['bench_press'].length).to.equal(1);
-            expect(responseBody.exercises['bench_press'][0].exerciseInputForTheDay.length).to.equal(1);
-            expect(responseBody.exercises['deadlift'][0].exerciseInputForTheDay.length).to.equal(1);
+            expect(responseBody.exercises[0].exerciseName).to.equal("bench_press");
+            expect(responseBody.exercises[1].exerciseName).to.equal("deadlift");
+            expect(responseBody.exercises[0].years.length).to.equal(1);
+            expect(responseBody.exercises[1].years.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].yearNumber).to.equal(year);
+            expect(responseBody.exercises[0].years[0].yearNumber).to.equal(year);
+            expect(responseBody.exercises[0].years[0].months.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].months.length).to.equal(1);
+            expect(responseBody.exercises[0].years[0].months[0].options.dataPoints.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].months[0].options.dataPoints.length).to.equal(1);
         });
         it('no token - /api/users/user/getUser', async function () {
             // Act
@@ -52,9 +60,11 @@ describe('api/user', function () {
             let responseBody = response.body;
 
             // Assert
+            expect(response.status).to.equal(200);
             expect(responseBody).not.to.equal(null);
-            expect(response.status).to.equal(403);
-            expect(responseBody).to.equal("No token specified.");
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
         });
         it('wrong token - /api/users/user/getUser', async function () {
             // Act
@@ -62,16 +72,16 @@ describe('api/user', function () {
             let responseBody = response.body;
 
             // Assert
+            expect(response.status).to.equal(200);
             expect(responseBody).not.to.equal(null);
             expect(responseBody.error).not.to.equal(null);
-            expect(response.status).to.equal(403);
             expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
     });
     describe('POST', async function () {
-        it('/api/users/user/create', async function () {
+        it('/api/users/user/register', async function () {
             // Act
-            const response = await request(app).post("/api/users/user/create").send({ "userEmail": "test@gmail.com" });
+            const response = await request(app).post("/api/users/user/register").send({ "userEmail": "test@gmail.com", "password": "passwordpassword", "repassword": "passwordpassword" });
             const user = await exerciseRepository.customQuery(`select * from users where email = 'test@gmail.com'`);
 
             // Assert
@@ -83,6 +93,10 @@ describe('api/user', function () {
     });
     describe('POST', function () {
         it('authorized - /api/users/user/postExerciseProgress', async function () {
+            // Arrange
+            const today: Date = new Date();
+            const year: number = today.getFullYear();
+
             // Act
             const postResponse = await request(app).post("/api/users/user/postExerciseProgress").set('Authorization', `Bearer ${token}`).send({
                 "exerciseName": "deadlift", "sets": 4, "weight": "200", "reps": 10, "weightUnit": "lbs"
@@ -96,12 +110,17 @@ describe('api/user', function () {
             expect(postResponse.status).to.equal(202);
             expect(responseBody.email).to.equal('pesjak.matej@gmail.com');
             expect(responseBody.exercises).not.to.equal(null);
-            expect(responseBody.exercises['deadlift']).not.to.equal(null);
-            expect(responseBody.exercises['bench_press']).not.to.equal(null);
-            expect(responseBody.exercises['deadlift'].length).to.equal(1);
-            expect(responseBody.exercises['bench_press'].length).to.equal(1);
-            expect(responseBody.exercises['bench_press'][0].exerciseInputForTheDay.length).to.equal(1);
-            expect(responseBody.exercises['deadlift'][0].exerciseInputForTheDay.length).to.equal(2);
+            expect(responseBody.exercises[0].exerciseName).to.equal("bench_press");
+            expect(responseBody.exercises[1].exerciseName).to.equal("deadlift");
+            expect(responseBody.exercises[0].years.length).to.equal(1);
+            expect(responseBody.exercises[1].years.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].yearNumber).to.equal(year);
+            expect(responseBody.exercises[0].years[0].yearNumber).to.equal(year);
+            expect(responseBody.exercises[0].years[0].months.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].months.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].months.length).to.equal(1);
+            expect(responseBody.exercises[0].years[0].months[0].options.dataPoints.length).to.equal(1);
+            expect(responseBody.exercises[1].years[0].months[0].options.dataPoints.length).to.equal(2);
         });
         it('non existing exercise - /api/users/user/postExerciseProgress', async function () {
             // Act
@@ -111,9 +130,8 @@ describe('api/user', function () {
             let responseBody = response.body;
 
             // Assert
-            expect(response.status).to.equal(404);
-
-            expect(responseBody).to.equal("No exercise: nonExistingOne");
+            expect(response.status).to.equal(202);
+            expect(responseBody.affectedRows).to.equal(1);
         });
         it('wrong token - /api/users/user/postExerciseProgress', async function () {
             // Act
@@ -122,7 +140,7 @@ describe('api/user', function () {
 
             // Assert
             expect(responseBody).not.to.equal(null);
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody.error).not.to.equal(null);
             expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
@@ -133,18 +151,20 @@ describe('api/user', function () {
 
             // Assert
             expect(responseBody).not.to.equal(null);
-            expect(response.status).to.equal(403);
-            expect(responseBody).to.equal("No token specified.");
+            expect(response.status).to.equal(200);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
         });
     });
     describe('PUT', function () {
-        it('authorized - /api/users/user/update/exercise', async function () {
+        it('authorized - /api/users/user/update/exerciseProgress', async function () {
             // Arrange
             const exerciseProgress = await exerciseRepository.customQuery('select * from exercise_progress');
             const exerciseProgressId = exerciseProgress[exerciseProgress.length - 1].id;
 
             // Act
-            let response = await request(app).put("/api/users/user/update/exercise").set('Authorization', `Bearer ${token}`).send({
+            let response = await request(app).put("/api/users/user/update/exerciseProgress").set('Authorization', `Bearer ${token}`).send({
                 "sets": 666, "weight": 666, "reps": 666, "weightUnit": "kg", "exerciseProgressId": exerciseProgressId
             });
             const exerciseCheck = await exerciseRepository.customQuery(`select * from exercise_progress where id = ${exerciseProgressId}`);
@@ -158,34 +178,36 @@ describe('api/user', function () {
             expect(exerciseCheck[0].reps).to.equal(666);
             expect(exerciseCheck[0].weight_unit).to.equal('kg');
         });
-        it('no token - /api/users/user/update/exercise', async function () {
+        it('no token - /api/users/user/update/exerciseProgress', async function () {
             // Act
-            let response = await request(app).put("/api/users/user/update/exercise");
+            let response = await request(app).put("/api/users/user/update/exerciseProgress");
             let responseBody = response.body;
 
             // Assert
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody).not.to.equal(null);
-            expect(responseBody).to.equal("No token specified.");
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
         });
-        it('wrong token - /api/users/user/update/exercise', async function () {
+        it('wrong token - /api/users/user/update/exerciseProgress', async function () {
             // Act
-            let response = await request(app).put("/api/users/user/update/exercise").set('Authorization', `Bearer asd${token}`).send({ "exerciseName": "newExerciseTest" });
+            let response = await request(app).put("/api/users/user/update/exerciseProgress").set('Authorization', `Bearer asd${token}`).send({ "exerciseName": "newExerciseTest" });
             let responseBody = response.body;
 
             // Assert
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody).not.to.equal(null);
             expect(responseBody.error).not.to.equal(null);
             expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
     });
     describe('DELETE', async function () {
-        it('authorized - /api/users/user/delete/exercise', async function () {
+        it('authorized - /api/users/user/delete/exerciseProgress', async function () {
             // Act
             const exerciseProgress = await exerciseRepository.customQuery('select * from exercise_progress');
             const exerciseProgressId = exerciseProgress[0].id;
-            let response = await request(app).delete("/api/users/user/delete/exercise").set('Authorization', `Bearer ${token}`).send({ "exerciseProgressId": exerciseProgressId });
+            let response = await request(app).delete("/api/users/user/delete/exerciseProgress").set('Authorization', `Bearer ${token}`).send({ "exerciseProgressId": exerciseProgressId });
             const exerciseProgressCheck = await exerciseRepository.customQuery(`select * from exercise_progress where id = ${exerciseProgressId}`);
 
             // Assert
@@ -193,24 +215,26 @@ describe('api/user', function () {
             expect(exerciseProgressCheck).not.to.equal(null);
             expect(exerciseProgressCheck.length).to.equal(0);
         });
-        it('no token - /api/users/user/delete/exercise', async function () {
+        it('no token - /api/users/user/delete/exerciseProgress', async function () {
             // Act
-            let response = await request(app).delete("/api/users/user/delete/exercise");
+            let response = await request(app).delete("/api/users/user/delete/exerciseProgress");
             let responseBody = response.body;
 
             // Assert
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody).not.to.equal(null);
-            expect(responseBody).to.equal("No token specified.");
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
         });
-        it('wrong token - /api/users/user/delete/exercise', async function () {
+        it('wrong token - /api/users/user/delete/exerciseProgress', async function () {
             // Act
-            let response = await request(app).delete("/api/users/user/delete/exercise").set('Authorization', `Bearer asd${token}`)
+            let response = await request(app).delete("/api/users/user/delete/exerciseProgress").set('Authorization', `Bearer asd${token}`)
             let responseBody = response.body;
 
             // Assert
             expect(responseBody).not.to.equal(null);
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody.error).not.to.equal(null);
             expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
@@ -256,13 +280,15 @@ describe('api/exercises', function () {
             // Assert
             expect(exercisesBody).not.to.equal(null);
             expect(exercises.status).to.equal(200);
-            expect(exercisesBody.length).to.equal(3);
+            expect(exercisesBody.length).to.equal(4);
             expect(exercisesBody[0].name).to.equal('bench_press');
             expect(exercisesBody[0].isCustomExercise).to.equal(false);
             expect(exercisesBody[1].name).to.equal('deadlift');
             expect(exercisesBody[1].isCustomExercise).to.equal(false);
-            expect(exercisesBody[2].name).to.equal('newExercise');
+            expect(exercisesBody[2].name).to.equal('nonExistingOne');
             expect(exercisesBody[2].isCustomExercise).to.equal(true);
+            expect(exercisesBody[3].name).to.equal('newExercise');
+            expect(exercisesBody[3].isCustomExercise).to.equal(true);
         });
     });
     describe('POST', function () {
@@ -300,7 +326,7 @@ describe('api/exercises', function () {
 
             // Assert
             expect(responseBody).not.to.equal(null);
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody.error).not.to.equal(null);
             expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
@@ -310,9 +336,11 @@ describe('api/exercises', function () {
             let responseBody = response.body;
 
             // Assert
-            expect(response.status).to.equal(403);
+            expect(response.status).to.equal(200);
             expect(responseBody).not.to.equal(null);
-            expect(responseBody).to.equal("No token specified.");
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
         });
     });
 });

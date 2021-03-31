@@ -1,17 +1,16 @@
 import { createNewExerciseSchema } from './exerciseValidationSchema';
 
-const validate = (schema: any, parameters: object, res, next) => {
-    const { error, value } = schema.validate(parameters);
+const validate = (schema: any, req, res, next) => {
+    const { error, value } = schema.validate(req.body);
     if (error) {
-        return res.status(400).json({ error });
+        return res.status(200).json({ error });
     } else {
         next();
     }
 }
 
 const validateCreateNewExerciseSchema = (req, res, next) => {
-    const { exerciseName, userEmail } = req.body;
-    validate(createNewExerciseSchema, { userEmail, exerciseName }, res, next);
+    validate(createNewExerciseSchema, req, res, next);
 }
 
 export {
