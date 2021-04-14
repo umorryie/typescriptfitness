@@ -136,7 +136,8 @@ const getFriends = async (req: Request, res: Response) => {
                 friends: result.map((friend: any) => {
                     return {
                         friendId: friend.friend_id,
-                        confirmed: friend.confirmed === 1 ? true : false
+                        confirmed: friend.confirmed === 1 ? true : false,
+                        email: friend.email
                     }
                 })
             });
@@ -181,7 +182,19 @@ const deleteFriends = async (req: Request, res: Response) => {
 };
 
 const confirmFriendship = async (req: Request, res: Response) => {
+    const { friendshipId } = req.body;
 
+    try {
+        const result: any = await userRepository.confirmFriendship(friendshipId);
+
+        if (result && result.affectedRows === 1) {
+            res.status(200).json({ message: 'Friendship confirmed.' });
+        } else {
+            res.status(200).json({ error: { message: 'Friend ship could not have been confirmed.' } });
+        }
+    } catch (error) {
+        res.status(200).json({ error });
+    }
 };
 
 export = {

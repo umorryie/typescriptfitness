@@ -39,7 +39,7 @@ userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend
 userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend], deleteFriends);
 
 // friendships confirmations
-userRouter.post('/friends/confirmation', [verifyToken, validateUserByBody], confirmFriendship);
+userRouter.put('/friends/confirmation', [verifyToken, validateUserByBody], confirmFriendship);
 
 export = {
     userRouter

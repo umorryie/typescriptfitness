@@ -9,7 +9,8 @@ const {
     getUserPassword,
     getFriends,
     addFriend,
-    deleteFriendship } = require('../database/sql');
+    deleteFriendship,
+    confirmFriendship } = require('../database/sql');
 import { IUserRepository } from '../interfaces/IUserRepository';
 
 export default class UserRepository implements IUserRepository {
@@ -119,7 +120,7 @@ export default class UserRepository implements IUserRepository {
         return new Promise((resolve, reject) => {
             this.db.query(getFriends(userId), (error, result) => {
                 if (error) {
-                    console.log(`Error getting frienships for user with id ${userId}`);
+                    console.log(`Error getting friendships for user with id ${userId}`);
                     return reject(error);
                 }
                 resolve(result);
@@ -131,7 +132,7 @@ export default class UserRepository implements IUserRepository {
         return new Promise((resolve, reject) => {
             this.db.query(addFriend(userId, friendId), (error, result) => {
                 if (error) {
-                    console.log(`Error getting frienships for user with id ${userId}`);
+                    console.log(`Error adding friendships for user with id ${userId}`);
                     return reject(error);
                 }
                 resolve(result);
@@ -143,7 +144,19 @@ export default class UserRepository implements IUserRepository {
         return new Promise((resolve, reject) => {
             this.db.query(deleteFriendship(userId, friendId), (error, result) => {
                 if (error) {
-                    console.log(`Error getting frienships for user with id ${userId}`);
+                    console.log(`Error deleting friendships for user with id ${userId}`);
+                    return reject(error);
+                }
+                resolve(result);
+            });
+        });
+    }
+    
+    confirmFriendship(friendshipId: number) {
+        return new Promise((resolve, reject) => {
+            this.db.query(confirmFriendship(friendshipId), (error, result) => {
+                if (error) {
+                    console.log(`Error confirming friendships`);
                     return reject(error);
                 }
                 resolve(result);

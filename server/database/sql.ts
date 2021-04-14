@@ -83,7 +83,7 @@ const getExerciseId = (exerciseName: string): string => {
 
 
 const getFriends = (id: number): string => {
-    return `select f.friend_id, fc.confirmed from friendships f, friendship_confirmations fc where f.user_id = ${id} and fc.friendship_id = f.id`;
+    return `select f.friend_id, fc.confirmed, u.email from friendships f, friendship_confirmations fc, users u where u.id = (select friend_id from friendships where id=fc.friendship_id) and f.user_id = ${id} and fc.friendship_id = f.id`;
 }
 
 const addFriend = (userId: number, friendId: number): string => {
@@ -93,6 +93,12 @@ const addFriend = (userId: number, friendId: number): string => {
 const deleteFriendship = (userId: number, friendId: number): string => {
     return `delete from friendship_confirmations where friendship_id = (select id from friendships where user_id=${userId} and friend_id=${friendId});
             delete from friendships where user_id=${userId} and friend_id=${friendId}`;
+};
+
+const confirmFriendship = (friendshipId: number): string => {
+    return `update friendship_confirmations 
+        set confirmed = TRUE 
+        where friendship_id = ${friendshipId};`;
 };
 
 export = {
@@ -113,5 +119,6 @@ export = {
     getUserPassword,
     getFriends,
     addFriend,
-    deleteFriendship
+    deleteFriendship,
+    confirmFriendship
 };

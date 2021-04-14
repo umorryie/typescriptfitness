@@ -1,12 +1,9 @@
 import 'mocha';
 import 'chai';
 import { expect } from 'chai';
-import fs from 'fs';
 import mysql from 'mysql';
-import path from 'path';
 const testConfig = require('../testDatabaseConfig');
 import ExerciseRepository from '../../repository/ExerciseRepository';
-import UserRepository from '../../repository/UserRepository';
 import app from '../../server';
 import request = require('supertest');
 const { generateToken } = require('../../auth/tokenAuth');
@@ -451,6 +448,41 @@ describe('api/users/friends', function () {
             expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
     });
+    describe('PUT', async function () {
+        it('should delete friendship - /api/users/friends/confirmation', async function () {
+            // Act
+            let response = await request(app).put("/api/users/friends/confirmation").set('Authorization', `Bearer ${token}`).send({ friendshipId: 2 });
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.message).to.equal('Friendship confirmed.');
+        });
+        it('no token - /api/users/friends/confirmation', async function () {
+            // Act
+            let response = await request(app).put("/api/users/friends/confirmation");
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
+        });
+        it('wrong token - /api/users/friends/confirmation', async function () {
+            // Act
+            let response = await request(app).put("/api/users/friends/confirmation").set('Authorization', `Bearer asd${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.name).to.equal("JsonWebTokenError");
+        });
+    });
     describe('GET', async function () {
         it('authorized - /api/users/friends', async function () {
             // Act
@@ -462,7 +494,8 @@ describe('api/users/friends', function () {
             expect(response.status).to.equal(200);
             expect(responseBody.friends.length).to.equal(1);
             expect(responseBody.friends[0].friendId).to.equal(3);
-            expect(responseBody.friends[0].confirmed).to.equal(false);
+            expect(responseBody.friends[0].confirmed).to.equal(true);
+            expect(responseBody.friends[0].email).to.equal('test@gmail.com');
         });
         it('no token - /api/users/friends', async function () {
             // Act
