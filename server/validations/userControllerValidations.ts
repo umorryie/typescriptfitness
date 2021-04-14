@@ -4,7 +4,9 @@ import {
     updateExerciseProgressSchema,
     deleteExerciseProgressWithIdSchema,
     userOnCreate,
-    userOnLogin
+    userOnLogin,
+    friendOnAddOrEditSchema,
+    friendshipConfirmationSchema
 } from './userValidationSchema';
 
 const validate = (schema: any, req, res, next) => {
@@ -44,11 +46,21 @@ const validateUserOnLogin = (req, res, next) => {
     validate(userOnLogin, req, res, next);
 }
 
+const validateFriendAddOrEdit = (req, res, next) => {
+    validate(friendOnAddOrEditSchema, req, res, next);
+}
+
+const validateFriendshipConfirmationSchema = (req, res, next) => {
+    validate(friendshipConfirmationSchema, req, res, next);
+}
+
 export {
     validateDeleteExerciseProgressWithIdSchema,
     validateUpdateExerciseProgressSchema,
     validatePostExerciseProgressSchema,
     validateUserEmailSchema,
     validateUserOnCreate,
-    validateUserOnLogin
+    validateUserOnLogin,
+    validateFriendAddOrEdit,
+    validateFriendshipConfirmationSchema
 }

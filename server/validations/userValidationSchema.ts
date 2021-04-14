@@ -45,11 +45,26 @@ const userOnLogin = joi.object({
     password: joi.string().required().min(8)
 });
 
+const friendOnAddOrEditSchema = joi.object({
+    userId: joi.number().required().min(1),
+    friendId: joi.number().required().min(1),
+    userEmail: joi.string().email().required(),
+    friendEmail: joi.string().email().required(),
+});
+
+const friendshipConfirmationSchema = joi.object({
+    userId: joi.number().required().min(1),
+    userEmail: joi.string().email().required(),
+    friendshipId: joi.number().required().min(1),
+});
+
 export {
     userEmailSchema,
     postExerciseProgressSchema,
     updateExerciseProgressSchema,
     deleteExerciseProgressWithIdSchema,
     userOnCreate,
-    userOnLogin
+    userOnLogin,
+    friendOnAddOrEditSchema,
+    friendshipConfirmationSchema
 }

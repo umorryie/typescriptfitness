@@ -5,7 +5,9 @@ import {
     validatePostExerciseProgressSchema,
     validateUserEmailSchema,
     validateUserOnCreate,
-    validateUserOnLogin
+    validateUserOnLogin,
+    validateFriendAddOrEdit,
+    validateFriendshipConfirmationSchema
 } from '../validations/userControllerValidations';
 const userRouter = express.Router();
 const { getUser,
@@ -35,11 +37,11 @@ userRouter.delete('/user/delete/exerciseProgress', [verifyToken, validateUserByB
 
 // friendships
 userRouter.get('/friends', [verifyToken, validateUserByBody, validateUserEmailSchema], getFriends);
-userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend], addFriends);
-userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend], deleteFriends);
+userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend, validateFriendAddOrEdit], addFriends);
+userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend, validateFriendAddOrEdit], deleteFriends);
 
 // friendships confirmations
-userRouter.put('/friends/confirmation', [verifyToken, validateUserByBody], confirmFriendship);
+userRouter.put('/friends/confirmation', [verifyToken, validateUserByBody, validateFriendshipConfirmationSchema], confirmFriendship);
 
 export = {
     userRouter
