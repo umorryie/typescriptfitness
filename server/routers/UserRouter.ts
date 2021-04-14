@@ -9,6 +9,7 @@ import {
     validateFriendAddOrEdit,
     validateFriendshipConfirmationSchema
 } from '../validations/userControllerValidations';
+const { validateFriendConfirmationLegality } = require('../validations/validateFriendConfirmationLegality');
 const userRouter = express.Router();
 const { getUser,
     postUser,
@@ -41,7 +42,7 @@ userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend
 userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend, validateFriendAddOrEdit], deleteFriends);
 
 // friendships confirmations
-userRouter.put('/friends/confirmation', [verifyToken, validateUserByBody, validateFriendshipConfirmationSchema], confirmFriendship);
+userRouter.put('/friends/confirmation', [verifyToken, validateUserByBody, validateFriendshipConfirmationSchema, validateFriendConfirmationLegality], confirmFriendship);
 
 export = {
     userRouter

@@ -151,10 +151,10 @@ export default class UserRepository implements IUserRepository {
             });
         });
     }
-    
-    confirmFriendship(friendshipId: number) {
+
+    confirmFriendship(friendshipId: number, userId: number, friendId: number) {
         return new Promise((resolve, reject) => {
-            this.db.query(confirmFriendship(friendshipId), (error, result) => {
+            this.db.query(confirmFriendship(friendshipId, userId, friendId), (error, result) => {
                 if (error) {
                     console.log(`Error confirming friendships`);
                     return reject(error);

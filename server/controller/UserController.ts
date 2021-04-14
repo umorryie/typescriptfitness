@@ -182,12 +182,12 @@ const deleteFriends = async (req: Request, res: Response) => {
 };
 
 const confirmFriendship = async (req: Request, res: Response) => {
-    const { friendshipId } = req.body;
+    const { friendshipId, userId, friendId } = req.body;
 
     try {
-        const result: any = await userRepository.confirmFriendship(friendshipId);
+        const result: any = await userRepository.confirmFriendship(friendshipId, userId, friendId);
 
-        if (result && result.affectedRows === 1) {
+        if (result && result.length === 3 && result[0].affectedRows === 1 && result[1].affectedRows === 1 && result[2].affectedRows === 1) {
             res.status(200).json({ message: 'Friendship confirmed.' });
         } else {
             res.status(200).json({ error: { message: 'Friend ship could not have been confirmed.' } });

@@ -95,10 +95,16 @@ const deleteFriendship = (userId: number, friendId: number): string => {
             delete from friendships where user_id=${userId} and friend_id=${friendId}`;
 };
 
-const confirmFriendship = (friendshipId: number): string => {
+const confirmFriendship = (friendshipId: number, userId: number, friendId: number): string => {
     return `update friendship_confirmations 
         set confirmed = TRUE 
-        where friendship_id = ${friendshipId};`;
+        where friendship_id = ${friendshipId};
+        insert into friendships(user_id, friend_id) values (${userId},${friendId});
+        insert into friendship_confirmations (friendship_id, confirmed) values(LAST_INSERT_ID(), true);`;
+};
+
+const getFriendship = (friendshipId: number): string => {
+    return `select * from friendships where id = ${friendshipId};`;
 };
 
 export = {
@@ -120,5 +126,6 @@ export = {
     getFriends,
     addFriend,
     deleteFriendship,
-    confirmFriendship
+    confirmFriendship,
+    getFriendship
 };

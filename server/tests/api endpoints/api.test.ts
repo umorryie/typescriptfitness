@@ -363,6 +363,7 @@ describe('api/exercises', function () {
 
 
 describe('api/users/friends', function () {
+    const testAccToken = generateToken({ userEmail: 'test@gmail.com' });
     let mysqlTestConnection;
     let exerciseRepository;
     before(async function () {
@@ -449,15 +450,25 @@ describe('api/users/friends', function () {
         });
     });
     describe('PUT', async function () {
-        it('should delete friendship - /api/users/friends/confirmation', async function () {
+        it('should  confirm friendship - /api/users/friends/confirmation', async function () {
             // Act
-            let response = await request(app).put("/api/users/friends/confirmation").set('Authorization', `Bearer ${token}`).send({ friendshipId: 2 });
+            let response = await request(app).put("/api/users/friends/confirmation").set('Authorization', `Bearer ${testAccToken}`).send({ friendshipId: 2 });
             let responseBody = response.body;
 
             // Assert
             expect(responseBody).not.to.equal(null);
             expect(response.status).to.equal(200);
             expect(responseBody.message).to.equal('Friendship confirmed.');
+        });
+        it('should alert when not authorized to confirm friendship - /api/users/friends/confirmation', async function () {
+            // Act
+            let response = await request(app).put("/api/users/friends/confirmation").set('Authorization', `Bearer ${token}`).send({ friendshipId: 2 });
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(403);
+            expect(responseBody.error.message).to.equal('Not authorized to confirm friendship.');
         });
         it('no token - /api/users/friends/confirmation', async function () {
             // Act
@@ -484,7 +495,7 @@ describe('api/users/friends', function () {
         });
     });
     describe('GET', async function () {
-        it('authorized - /api/users/friends', async function () {
+        it('authorized should confirm friendship - /api/users/friends', async function () {
             // Act
             let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer ${token}`);
             let responseBody = response.body;
@@ -496,6 +507,19 @@ describe('api/users/friends', function () {
             expect(responseBody.friends[0].friendId).to.equal(3);
             expect(responseBody.friends[0].confirmed).to.equal(true);
             expect(responseBody.friends[0].email).to.equal('test@gmail.com');
+        });
+        it('should add friendship when its previously confirmed by friend - /api/users/friends', async function () {
+            // Act
+            let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer ${testAccToken}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.friends.length).to.equal(1);
+            expect(responseBody.friends[0].friendId).to.equal(1);
+            expect(responseBody.friends[0].confirmed).to.equal(true);
+            expect(responseBody.friends[0].email).to.equal('pesjak.matej@gmail.com');
         });
         it('no token - /api/users/friends', async function () {
             // Act
