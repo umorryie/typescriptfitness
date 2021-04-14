@@ -12,7 +12,7 @@ import request = require('supertest');
 const { generateToken } = require('../../auth/tokenAuth');
 const token = generateToken({ userEmail: "pesjak.matej@gmail.com" });
 
-describe('api/user', function () {
+describe('api/users/user', function () {
     let mysqlTestConnection;
     let exerciseRepository;
     before(async function () {
@@ -89,6 +89,25 @@ describe('api/user', function () {
             expect(user).not.to.equal(null);
             expect(user.length).to.equal(1);
             expect(user[0].email).to.equal('test@gmail.com');
+        });
+    });
+    describe('POST', async function () {
+        it('should login with correct credentials /api/users/user/login', async function () {
+            // Act
+            const response = await request(app).post("/api/users/user/login").send({ "userEmail": "test@gmail.com", "password": "passwordpassword" });
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(response.body.token).not.to.equal(null);
+            expect(response.body.match).to.equal(true);
+        });
+        it('should alert when wrong credentials /api/users/user/login', async function () {
+            // Act
+            const response = await request(app).post("/api/users/user/login").send({ "userEmail": "test@gmail.com", "password": "passwordpassword1" });
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(response.body.error.message).to.equal('Password do not match with this email.');
         });
     });
     describe('POST', function () {
@@ -341,6 +360,132 @@ describe('api/exercises', function () {
             expect(responseBody.error).not.to.equal(null);
             expect(responseBody.error.message).not.to.equal(null);
             expect(responseBody.error.message).to.equal("No token specified.");
+        });
+    });
+});
+
+
+describe('api/users/friends', function () {
+    let mysqlTestConnection;
+    let exerciseRepository;
+    before(async function () {
+        mysqlTestConnection = mysql.createPool({
+            user: testConfig.user,
+            database: testConfig.database,
+            password: testConfig.password,
+            host: testConfig.host,
+            port: testConfig.port,
+            multipleStatements: true
+        });
+
+        exerciseRepository = new ExerciseRepository(mysqlTestConnection);
+    })
+
+    describe('POST', async function () {
+        it('should add friendship - /api/users/friends/add', async function () {
+            // Act
+            let response = await request(app).post("/api/users/friends/add").set('Authorization', `Bearer ${token}`).send({ friendEmail: 'test@gmail.com' });
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(202);
+            expect(responseBody.message).to.equal('Friendship inserted.');
+        });
+        it('no token - /api/users/friends/add', async function () {
+            // Act
+            let response = await request(app).post("/api/users/friends/add");
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
+        });
+        it('wrong token - /api/users/friends/add', async function () {
+            // Act
+            let response = await request(app).post("/api/users/friends/add").set('Authorization', `Bearer asd${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.name).to.equal("JsonWebTokenError");
+        });
+    });
+    describe('DELETE', async function () {
+        it('should delete friendship - /api/users/friends/delete', async function () {
+            // Act
+            let response = await request(app).delete("/api/users/friends/delete").set('Authorization', `Bearer ${token}`).send({ friendEmail: 'katja.zalokar@gmail.com' });
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.message).to.equal('Friendship deleted.');
+        });
+        it('no token - /api/users/friends/delete', async function () {
+            // Act
+            let response = await request(app).delete("/api/users/friends/delete");
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
+        });
+        it('wrong token - /api/users/friends/delete', async function () {
+            // Act
+            let response = await request(app).delete("/api/users/friends/delete").set('Authorization', `Bearer asd${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.name).to.equal("JsonWebTokenError");
+        });
+    });
+    describe('GET', async function () {
+        it('authorized - /api/users/friends', async function () {
+            // Act
+            let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer ${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.friends.length).to.equal(1);
+            expect(responseBody.friends[0].friendId).to.equal(3);
+            expect(responseBody.friends[0].confirmed).to.equal(false);
+        });
+        it('no token - /api/users/friends', async function () {
+            // Act
+            let response = await request(app).get("/api/users/friends");
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
+        });
+        it('wrong token - /api/users/friends', async function () {
+            // Act
+            let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer asd${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.name).to.equal("JsonWebTokenError");
         });
     });
 });

@@ -6,7 +6,10 @@ const {
     insertExerciseProgress,
     updateExerciseProgress,
     deleteExerciseProgress,
-    getUserPassword } = require('../database/sql');
+    getUserPassword,
+    getFriends,
+    addFriend,
+    deleteFriendship } = require('../database/sql');
 import { IUserRepository } from '../interfaces/IUserRepository';
 
 export default class UserRepository implements IUserRepository {
@@ -105,6 +108,42 @@ export default class UserRepository implements IUserRepository {
             this.db.query(getUserPassword(userEmail), (error, result) => {
                 if (error) {
                     console.log(`Error getting password for user ${userEmail}`);
+                    return reject(error);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    getFriends(userId: number) {
+        return new Promise((resolve, reject) => {
+            this.db.query(getFriends(userId), (error, result) => {
+                if (error) {
+                    console.log(`Error getting frienships for user with id ${userId}`);
+                    return reject(error);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    addFriend(userId: number, friendId: number) {
+        return new Promise((resolve, reject) => {
+            this.db.query(addFriend(userId, friendId), (error, result) => {
+                if (error) {
+                    console.log(`Error getting frienships for user with id ${userId}`);
+                    return reject(error);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    deleteFriendship(userId: number, friendId: number) {
+        return new Promise((resolve, reject) => {
+            this.db.query(deleteFriendship(userId, friendId), (error, result) => {
+                if (error) {
+                    console.log(`Error getting frienships for user with id ${userId}`);
                     return reject(error);
                 }
                 resolve(result);

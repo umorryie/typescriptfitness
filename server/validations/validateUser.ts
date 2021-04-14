@@ -43,8 +43,39 @@ const validateUserByParams = (req, res, next) => {
         }
     });
 }
+const validateFriend = (req, res, next) => {
+    const { friendEmail, userId } = req.body;
+    connection.query(getUserByEmail(friendEmail), (error, user) => {
+        if (error) {
+            console.log(`Error retrieving friend with error: ${error}`);
+            res.status(200).json({ error })
+        } else {
+            if (user.length == 0) {
+                console.log(`No friend with email address: ${friendEmail}`);
+                res.status(200).json({
+                    error: {
+                        message: `No friend with email address: ${friendEmail}`
+                    }
+                });
+            } else {
+                if (userId == user[0].id) {
+                    console.log('You can not add yourself.');
+                    return res.status(200).json({
+                        error: {
+                            message: 'You can not add yourself.'
+                        }
+                    });
+                }
+
+                req.body.friendId = user[0].id;
+                next();
+            }
+        }
+    });
+}
 
 export = {
     validateUserByBody,
-    validateUserByParams
+    validateUserByParams,
+    validateFriend
 };

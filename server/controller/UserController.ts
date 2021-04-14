@@ -4,8 +4,9 @@ import passwordHash from 'password-hash';
 import UserRepository from '../repository/UserRepository';
 const userRepository = new UserRepository(connection);
 const { generateToken } = require('../auth/tokenAuth');
+import { Request, Response } from 'express';
 
-const getUser = async (req, res) => {
+const getUser = async (req: Request, res: Response) => {
     const { userEmail } = req.body;
     try {
         const userArray: any = await userRepository.getAllUsersInformation(userEmail);
@@ -20,7 +21,7 @@ const getUser = async (req, res) => {
     }
 }
 
-const postUser = async (req, res) => {
+const postUser = async (req: Request, res: Response) => {
     const { userEmail, password, repassword } = req.body;
 
     if (password !== repassword) {
@@ -43,7 +44,7 @@ const postUser = async (req, res) => {
     }
 }
 
-const postExerciseProgress = async (req, res) => {
+const postExerciseProgress = async (req: Request, res: Response) => {
     const {
         exerciseName,
         sets,
@@ -72,7 +73,7 @@ const postExerciseProgress = async (req, res) => {
     }
 }
 
-const updateExerciseProgress = async (req, res) => {
+const updateExerciseProgress = async (req: Request, res: Response) => {
     const {
         sets,
         reps,
@@ -90,7 +91,7 @@ const updateExerciseProgress = async (req, res) => {
 
 }
 
-const deleteExerciseProgressWithId = async (req, res) => {
+const deleteExerciseProgressWithId = async (req: Request, res: Response) => {
     const { exerciseProgressId } = req.body;
 
     try {
@@ -101,7 +102,7 @@ const deleteExerciseProgressWithId = async (req, res) => {
     }
 }
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response) => {
     const { userEmail, password } = req.body;
 
     try {
@@ -114,9 +115,9 @@ const login = async (req, res) => {
         if (passwordMatch) {
             const token = generateToken({ userEmail });
             res.setHeader('Authorization', 'Bearer ' + token);
-            res.status(202).json({ match: true, token });
+            res.status(200).json({ match: true, token });
         } else {
-            res.status(202).json({ error: { message: "Password do not match with this email.", match: false } });
+            res.status(200).json({ error: { message: "Password do not match with this email.", match: false } });
         }
     } catch (error) {
         console.log(error)
@@ -124,11 +125,74 @@ const login = async (req, res) => {
     }
 }
 
+const getFriends = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    try {
+        const result: any = await userRepository.getFriends(userId);
+
+        if (result && result.length > 0) {
+            res.status(200).json({
+                friends: result.map((friend: any) => {
+                    return {
+                        friendId: friend.friend_id,
+                        confirmed: friend.confirmed === 1 ? true : false
+                    }
+                })
+            });
+        } else {
+            res.status(200).json({ friends: [] });
+        }
+    } catch (error) {
+        res.status(200).json({ error });
+    }
+};
+
+const addFriends = async (req: Request, res: Response) => {
+    const { userId, friendId } = req.body;
+
+    try {
+        const result: any = await userRepository.addFriend(userId, friendId);
+
+        if (result && result.length === 2 && result[0].affectedRows === 1 && result[1].affectedRows === 1) {
+            res.status(202).json({ message: 'Friendship inserted.' });
+        } else {
+            res.status(200).json({ error: { message: 'Friend ship could not have been inserted.' } });
+        }
+    } catch (error) {
+        res.status(200).json({ error });
+    }
+};
+
+const deleteFriends = async (req: Request, res: Response) => {
+    const { userId, friendId } = req.body;
+
+    try {
+        const result: any = await userRepository.deleteFriendship(userId, friendId);
+
+        if (result && result.length === 2 && result[0].affectedRows === 1 && result[1].affectedRows === 1) {
+            res.status(200).json({ message: 'Friendship deleted.' });
+        } else {
+            res.status(200).json({ error: { message: 'Friend ship could not have been deleted.' } });
+        }
+    } catch (error) {
+        res.status(200).json({ error });
+    }
+};
+
+const confirmFriendship = async (req: Request, res: Response) => {
+
+};
+
 export = {
     getUser,
     postUser,
     postExerciseProgress,
     updateExerciseProgress,
     deleteExerciseProgressWithId,
-    login
+    login,
+    getFriends,
+    addFriends,
+    deleteFriends,
+    confirmFriendship
 };

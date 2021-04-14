@@ -5,6 +5,8 @@ DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS exercises;
 DROP TABLE IF EXISTS users_exercises;
 DROP TABLE IF EXISTS exercise_progress;
+DROP TABLE IF EXISTS friendships;
+DROP TABLE IF EXISTS friendship_confirmations;
 SET FOREIGN_KEY_CHECKS = 1;
 CREATE TABLE users(
         id int not null unique auto_increment,
@@ -40,3 +42,25 @@ CREATE TABLE exercise_progress(
         CONSTRAINT FK_User_Exercise_Id
         FOREIGN KEY (user_exercise_id) REFERENCES users_exercises(id)
     );
+CREATE TABLE friendships(
+        id int not null unique auto_increment,
+        user_id int,
+        friend_id int,
+        PRIMARY KEY (id),
+        CONSTRAINT FK_Friendship_User_Id
+        FOREIGN KEY (user_id) REFERENCES users(id),
+        CONSTRAINT FK_Friendship_Friend_Id
+        FOREIGN KEY (friend_id) REFERENCES users(id)
+    );
+CREATE TABLE friendship_confirmations(
+        id int not null unique auto_increment,
+        confirmed boolean default false,
+        friendship_id int not null unique,
+        PRIMARY KEY (id),
+        CONSTRAINT FK_Friendship_Id
+        FOREIGN KEY (friendship_id) REFERENCES friendships(id)
+    );
+ALTER TABLE friendships
+ADD CONSTRAINT no_duplicated_friendships UNIQUE KEY(user_id,friend_id);
+ALTER TABLE users_exercises
+ADD CONSTRAINT no_duplicated_users_exercises UNIQUE KEY(user_id,exercise_id);

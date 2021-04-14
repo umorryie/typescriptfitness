@@ -81,6 +81,20 @@ const getExerciseId = (exerciseName: string): string => {
     return `select id from exercises where name = '${exerciseName}'`;
 }
 
+
+const getFriends = (id: number): string => {
+    return `select f.friend_id, fc.confirmed from friendships f, friendship_confirmations fc where f.user_id = ${id} and fc.friendship_id = f.id`;
+}
+
+const addFriend = (userId: number, friendId: number): string => {
+    return `insert into friendships(user_id, friend_id) values (${userId},${friendId}); insert into friendship_confirmations (friendship_id, confirmed) values(LAST_INSERT_ID(), false);`;
+};
+
+const deleteFriendship = (userId: number, friendId: number): string => {
+    return `delete from friendship_confirmations where friendship_id = (select id from friendships where user_id=${userId} and friend_id=${friendId});
+            delete from friendships where user_id=${userId} and friend_id=${friendId}`;
+};
+
 export = {
     createSchema,
     selectFitnessSchema,
@@ -96,5 +110,8 @@ export = {
     getExerciseId,
     updateExerciseProgress,
     insertCustomUserExercise,
-    getUserPassword
+    getUserPassword,
+    getFriends,
+    addFriend,
+    deleteFriendship
 };
