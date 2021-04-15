@@ -4,8 +4,9 @@ const selectFitnessSchema: string = 'use fitness;';
 
 const getExercisesNames: string = 'select name, is_custom_exercise as isCustomExercise from exercises;';
 
-const insertUser = (userEmail: string, password: string, firstName: string, lastName: string) : string => {
-    return `insert into users (email, password, first_name, last_name) values ('${userEmail}', '${password}', '${firstName}', '${lastName}')`;
+const insertUser = (userEmail: string, password: string, firstName: string, lastName: string): string => {
+    return `SET CHARACTER SET 'utf8';
+    insert into users (email, password, first_name, last_name) values ('${userEmail}', '${password}', '${firstName}', '${lastName}')`;
 };
 
 const getUserPassword = (userEmail: string): string => {
