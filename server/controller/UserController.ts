@@ -31,7 +31,8 @@ const postUser = async (req: Request, res: Response) => {
 
     try {
         const result: any = await userRepository.insertUser(userEmail, hashedPassword, firstName, lastName);
-        if (result.affectedRows === 1) {
+
+        if (result && result.length === 2 && result[1].affectedRows === 1) {
             const token = generateToken({ userEmail });
             res.setHeader('Authorization', 'Bearer ' + token);
             res.status(202).json({ userEmail, token });
