@@ -83,7 +83,12 @@ const getExerciseId = (exerciseName: string): string => {
 
 
 const getFriends = (id: number): string => {
-    return `select f.friend_id, fc.confirmed, u.email from friendships f, friendship_confirmations fc, users u where u.id = (select friend_id from friendships where id=fc.friendship_id) and f.user_id = ${id} and fc.friendship_id = f.id`;
+    return `select f.id as friendshipId, f.user_id as user, f.friend_id as friendId, fc.confirmed, u.email as friendsEmail
+    from friendships f, friendship_confirmations fc, users u 
+    where u.id = (select friend_id from friendships where id=fc.friendship_id) and f.user_id = ${id} and fc.friendship_id = f.id;
+    select f.id as friendshipId, f.friend_id as user, f.user_id as friendId, fc.confirmed, u.email as friendsEmail
+    from friendships f, friendship_confirmations fc, users u 
+    where u.id = (select user_id from friendships where id=fc.friendship_id) and f.friend_id = ${id} and fc.friendship_id = f.id;`
 }
 
 const addFriend = (userId: number, friendId: number): string => {
@@ -98,13 +103,15 @@ const deleteFriendship = (userId: number, friendId: number): string => {
 const confirmFriendship = (friendshipId: number, userId: number, friendId: number): string => {
     return `update friendship_confirmations 
         set confirmed = TRUE 
-        where friendship_id = ${friendshipId};
-        insert into friendships(user_id, friend_id) values (${userId},${friendId});
-        insert into friendship_confirmations (friendship_id, confirmed) values(LAST_INSERT_ID(), true);`;
+        where friendship_id = ${friendshipId};`;
 };
 
 const getFriendship = (friendshipId: number): string => {
     return `select * from friendships where id = ${friendshipId};`;
+};
+
+const getFriendshipByMetaData = (userId: number, friendId: number): string => {
+    return `select count(*) as number from friendships where (user_id=${userId} and friend_id = ${friendId}) or (user_id=${friendId} and friend_id = ${userId})`;
 };
 
 export = {
@@ -127,5 +134,6 @@ export = {
     addFriend,
     deleteFriendship,
     confirmFriendship,
-    getFriendship
+    getFriendship,
+    getFriendshipByMetaData
 };

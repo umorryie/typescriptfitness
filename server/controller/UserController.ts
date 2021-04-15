@@ -131,18 +131,39 @@ const getFriends = async (req: Request, res: Response) => {
     try {
         const result: any = await userRepository.getFriends(userId);
 
-        if (result && result.length > 0) {
-            res.status(200).json({
-                friends: result.map((friend: any) => {
+        if (result && result.length == 2) {
+            const friends = {
+                friendsAddedMySelf: result[0].map((friend: any) => {
                     return {
-                        friendId: friend.friend_id,
+                        friendId: friend.friendId,
                         confirmed: friend.confirmed === 1 ? true : false,
-                        email: friend.email
+                        email: friend.friendsEmail,
+                        friendshipId: friend.friendshipId
                     }
-                })
-            });
+                }),
+                friendsAddedMe: result[1].map((friend: any) => {
+                    return {
+                        friendId: friend.friendId,
+                        confirmed: friend.confirmed === 1 ? true : false,
+                        email: friend.friendsEmail,
+                        friendshipId: friend.friendshipId
+                    }
+                }),
+            };
+            const friendsResponse = {
+                friendsAddedMySelf: {
+                    confirmed: friends.friendsAddedMySelf.filter(el => el.confirmed),
+                    pending: friends.friendsAddedMySelf.filter(el => !el.confirmed)
+                },
+                friendsAddedMe: {
+                    confirmed: friends.friendsAddedMe.filter(el => el.confirmed),
+                    pending: friends.friendsAddedMe.filter(el => !el.confirmed)
+                },
+
+            };
+            res.status(200).json(friendsResponse);
         } else {
-            res.status(200).json({ friends: [] });
+            res.status(200).json({ error: { message: 'Something went wrong getting friends.' } });
         }
     } catch (error) {
         res.status(200).json({ error });
@@ -187,7 +208,7 @@ const confirmFriendship = async (req: Request, res: Response) => {
     try {
         const result: any = await userRepository.confirmFriendship(friendshipId, userId, friendId);
 
-        if (result && result.length === 3 && result[0].affectedRows === 1 && result[1].affectedRows === 1 && result[2].affectedRows === 1) {
+        if (result && result.affectedRows === 1) {
             res.status(200).json({ message: 'Friendship confirmed.' });
         } else {
             res.status(200).json({ error: { message: 'Friend ship could not have been confirmed.' } });

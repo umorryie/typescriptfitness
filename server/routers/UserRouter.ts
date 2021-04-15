@@ -24,6 +24,7 @@ const { getUser,
 const { validateUserByBody, validateFriend } = require('../validations/validateUser');
 const { validateExercise } = require('../validations/validateExercise');
 const { verifyToken } = require('../auth/tokenAuth');
+const { validateAddingFriendLegality } = require('../validations/validateAddingFriendLegality')
 
 // credentials 
 userRouter.post('/user/register', validateUserOnCreate, postUser);
@@ -38,7 +39,7 @@ userRouter.delete('/user/delete/exerciseProgress', [verifyToken, validateUserByB
 
 // friendships
 userRouter.get('/friends', [verifyToken, validateUserByBody, validateUserEmailSchema], getFriends);
-userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend, validateFriendAddOrEdit], addFriends);
+userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend, validateAddingFriendLegality, validateFriendAddOrEdit], addFriends);
 userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend, validateFriendAddOrEdit], deleteFriends);
 
 // friendships confirmations

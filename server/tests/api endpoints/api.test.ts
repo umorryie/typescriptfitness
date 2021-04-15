@@ -390,6 +390,26 @@ describe('api/users/friends', function () {
             expect(response.status).to.equal(202);
             expect(responseBody.message).to.equal('Friendship inserted.');
         });
+        it('should alert when adding yourself - /api/users/friends/add', async function () {
+            // Act
+            let response = await request(app).post("/api/users/friends/add").set('Authorization', `Bearer ${token}`).send({ friendEmail: 'pesjak.matej@gmail.com' });
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.error.message).to.equal('You can not add yourself.');
+        });
+        it('should alert when friendship already exists add friendship - /api/users/friends/add', async function () {
+            // Act
+            let response = await request(app).post("/api/users/friends/add").set('Authorization', `Bearer ${testAccToken}`).send({ friendEmail: 'pesjak.matej@gmail.com' });
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.error.message).to.equal('Friendship already exists.');
+        });
         it('no token - /api/users/friends/add', async function () {
             // Act
             let response = await request(app).post("/api/users/friends/add");
@@ -495,7 +515,33 @@ describe('api/users/friends', function () {
         });
     });
     describe('GET', async function () {
-        it('authorized should confirm friendship - /api/users/friends', async function () {
+        it('authorized should get users when you add users - /api/users/friends', async function () {
+            // Arrange
+            await request(app).post("/api/users/friends/add").set('Authorization', `Bearer ${generateToken({ userEmail: 'katja.zalokar@gmail.com' })}`).send({ friendEmail: 'pesjak.matej@gmail.com' });
+
+            const wantedResponse = {
+                friendsAddedMySelf: {
+                    confirmed: [
+                        {
+                            friendId: 3,
+                            confirmed: true,
+                            email: "test@gmail.com",
+                            friendshipId: 2
+                        }],
+                    pending: []
+                },
+                friendsAddedMe: {
+                    confirmed: [],
+                    pending: [
+                        {
+                            friendId: 2,
+                            confirmed: false,
+                            email: "katja.zalokar@gmail.com",
+                            friendshipId: 3
+                        }]
+                }
+            };
+
             // Act
             let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer ${token}`);
             let responseBody = response.body;
@@ -503,12 +549,27 @@ describe('api/users/friends', function () {
             // Assert
             expect(responseBody).not.to.equal(null);
             expect(response.status).to.equal(200);
-            expect(responseBody.friends.length).to.equal(1);
-            expect(responseBody.friends[0].friendId).to.equal(3);
-            expect(responseBody.friends[0].confirmed).to.equal(true);
-            expect(responseBody.friends[0].email).to.equal('test@gmail.com');
+            expect(responseBody).to.deep.equal(wantedResponse);
         });
-        it('should add friendship when its previously confirmed by friend - /api/users/friends', async function () {
+        it('should get valid friends when other add you - /api/users/friends', async function () {
+            // Arrange
+            const wantedResponse = {
+                friendsAddedMySelf: {
+                    confirmed: [],
+                    pending: []
+                },
+                friendsAddedMe: {
+                    confirmed: [
+                        {
+                            friendId: 1,
+                            confirmed: true,
+                            email: "pesjak.matej@gmail.com",
+                            friendshipId: 2
+                        }],
+                    pending: []
+                }
+            };
+
             // Act
             let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer ${testAccToken}`);
             let responseBody = response.body;
@@ -516,10 +577,8 @@ describe('api/users/friends', function () {
             // Assert
             expect(responseBody).not.to.equal(null);
             expect(response.status).to.equal(200);
-            expect(responseBody.friends.length).to.equal(1);
-            expect(responseBody.friends[0].friendId).to.equal(1);
-            expect(responseBody.friends[0].confirmed).to.equal(true);
-            expect(responseBody.friends[0].email).to.equal('pesjak.matej@gmail.com');
+            expect(responseBody).to.deep.equal(wantedResponse);
+
         });
         it('no token - /api/users/friends', async function () {
             // Act
