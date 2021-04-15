@@ -32,9 +32,9 @@ export default class UserRepository implements IUserRepository {
         });
     }
 
-    insertUser(userEmail: string, password: string) {
+    insertUser(userEmail: string, password: string, firstName: string, lastName: string) {
         return new Promise((resolve, reject) => {
-            this.db.query(insertUser(userEmail, password), (error, result) => {
+            this.db.query(insertUser(userEmail, password, firstName, lastName), (error, result) => {
                 if (error) {
                     console.log(`Error inserting user ${userEmail} with error: ${error}`);
                     return reject(error);

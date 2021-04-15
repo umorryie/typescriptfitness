@@ -12,6 +12,8 @@ CREATE TABLE users(
         id int not null unique auto_increment,
         email varchar(255) unique not null,
         PRIMARY KEY (id),
+        last_name varchar(255) not null,
+        first_name varchar(255) not null,
         password varchar(255)
     );
 CREATE TABLE exercises(

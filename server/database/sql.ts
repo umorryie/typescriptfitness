@@ -4,8 +4,8 @@ const selectFitnessSchema: string = 'use fitness;';
 
 const getExercisesNames: string = 'select name, is_custom_exercise as isCustomExercise from exercises;';
 
-const insertUser = (userEmail: string, password: string): string => {
-    return `insert into users (email, password) values ('${userEmail}', '${password}')`;
+const insertUser = (userEmail: string, password: string, firstName: string, lastName: string) : string => {
+    return `insert into users (email, password, first_name, last_name) values ('${userEmail}', '${password}', '${firstName}', '${lastName}')`;
 };
 
 const getUserPassword = (userEmail: string): string => {
@@ -83,10 +83,10 @@ const getExerciseId = (exerciseName: string): string => {
 
 
 const getFriends = (id: number): string => {
-    return `select f.id as friendshipId, f.user_id as user, f.friend_id as friendId, fc.confirmed, u.email as friendsEmail
+    return `select f.id as friendshipId, f.user_id as user, f.friend_id as friendId, fc.confirmed, u.email as friendsEmail, u.first_name as firstName, u.last_name as lastName
     from friendships f, friendship_confirmations fc, users u 
     where u.id = (select friend_id from friendships where id=fc.friendship_id) and f.user_id = ${id} and fc.friendship_id = f.id;
-    select f.id as friendshipId, f.friend_id as user, f.user_id as friendId, fc.confirmed, u.email as friendsEmail
+    select f.id as friendshipId, f.friend_id as user, f.user_id as friendId, fc.confirmed, u.email as friendsEmail, u.first_name as firstName, u.last_name as lastName
     from friendships f, friendship_confirmations fc, users u 
     where u.id = (select user_id from friendships where id=fc.friendship_id) and f.friend_id = ${id} and fc.friendship_id = f.id;`
 }

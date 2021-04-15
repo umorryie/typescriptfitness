@@ -24,6 +24,8 @@ CREATE TABLE users(
     id int not null unique auto_increment,
     email varchar(255) unique not null,
     PRIMARY KEY (id),
+    last_name varchar(255) not null,
+    first_name varchar(255) not null,
     password varchar(255)
 );
 
@@ -109,17 +111,27 @@ SET
     FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO
-    users (email, password)
+    users (email, password, first_name, last_name)
 VALUES
-    ('pesjak.matej@gmail.com', 'password1!');
+    (
+        'pesjak.matej@gmail.com',
+        'password1!',
+        'matej',
+        'pesjak'
+    );
 
 SET
     @user1Id = LAST_INSERT_ID();
 
 INSERT INTO
-    users (email, password)
+    users (email, password, first_name, last_name)
 VALUES
-    ('katja.zalokar@gmail.com', 'password1!');
+    (
+        'katja.zalokar@gmail.com',
+        'password1!',
+        'katja',
+        'zalokar'
+    );
 
 SET
     @user2Id = LAST_INSERT_ID();

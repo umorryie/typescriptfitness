@@ -22,7 +22,7 @@ const getUser = async (req: Request, res: Response) => {
 }
 
 const postUser = async (req: Request, res: Response) => {
-    const { userEmail, password, repassword } = req.body;
+    const { userEmail, password, repassword, firstName, lastName } = req.body;
 
     if (password !== repassword) {
         return res.status(200).json({ error: { message: 'Passwords do not match' } });
@@ -30,7 +30,7 @@ const postUser = async (req: Request, res: Response) => {
     const hashedPassword: string = passwordHash.generate(password);
 
     try {
-        const result: any = await userRepository.insertUser(userEmail, hashedPassword);
+        const result: any = await userRepository.insertUser(userEmail, hashedPassword, firstName, lastName);
         if (result.affectedRows === 1) {
             const token = generateToken({ userEmail });
             res.setHeader('Authorization', 'Bearer ' + token);
@@ -135,6 +135,9 @@ const getFriends = async (req: Request, res: Response) => {
             const friends = {
                 friendsAddedMySelf: result[0].map((friend: any) => {
                     return {
+                        firstName: friend.firstName,
+                        lastName: friend.lastName,
+                        addedMySelf: true,
                         friendId: friend.friendId,
                         confirmed: friend.confirmed === 1 ? true : false,
                         email: friend.friendsEmail,
@@ -143,6 +146,9 @@ const getFriends = async (req: Request, res: Response) => {
                 }),
                 friendsAddedMe: result[1].map((friend: any) => {
                     return {
+                        firstName: friend.firstName,
+                        lastName: friend.lastName,
+                        addedMySelf: false,
                         friendId: friend.friendId,
                         confirmed: friend.confirmed === 1 ? true : false,
                         email: friend.friendsEmail,

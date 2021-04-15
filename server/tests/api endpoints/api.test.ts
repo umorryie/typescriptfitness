@@ -78,7 +78,13 @@ describe('api/users/user', function () {
     describe('POST', async function () {
         it('/api/users/user/register', async function () {
             // Act
-            const response = await request(app).post("/api/users/user/register").send({ "userEmail": "test@gmail.com", "password": "passwordpassword", "repassword": "passwordpassword" });
+            const response = await request(app).post("/api/users/user/register").send({
+                "userEmail": "test@gmail.com",
+                "password": "passwordpassword",
+                "repassword": "passwordpassword",
+                "firstName": "test",
+                "lastName": "test"
+            });
             const user = await exerciseRepository.customQuery(`select * from users where email = 'test@gmail.com'`);
 
             // Assert
@@ -523,6 +529,9 @@ describe('api/users/friends', function () {
                 friendsAddedMySelf: {
                     confirmed: [
                         {
+                            lastName: 'test',
+                            firstName: 'test',
+                            addedMySelf: true,
                             friendId: 3,
                             confirmed: true,
                             email: "test@gmail.com",
@@ -534,6 +543,9 @@ describe('api/users/friends', function () {
                     confirmed: [],
                     pending: [
                         {
+                            lastName: 'zalokar',
+                            firstName: 'katja',
+                            addedMySelf: false,
                             friendId: 2,
                             confirmed: false,
                             email: "katja.zalokar@gmail.com",
@@ -561,6 +573,9 @@ describe('api/users/friends', function () {
                 friendsAddedMe: {
                     confirmed: [
                         {
+                            addedMySelf: false,
+                            lastName: 'pesjak',
+                            firstName: 'matej',
                             friendId: 1,
                             confirmed: true,
                             email: "pesjak.matej@gmail.com",

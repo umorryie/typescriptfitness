@@ -38,6 +38,8 @@ const userOnCreate = joi.object({
     userEmail: joi.string().email().required(),
     password: joi.string().required().min(8),
     repassword: joi.string().required().min(8),
+    firstName: joi.string().required().min(1),
+    lastName: joi.string().required().min(1),
 });
 
 const userOnLogin = joi.object({
