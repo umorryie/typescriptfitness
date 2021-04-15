@@ -443,7 +443,7 @@ describe('api/users/friends', function () {
     describe('DELETE', async function () {
         it('should delete friendship - /api/users/friends/delete', async function () {
             // Act
-            let response = await request(app).delete("/api/users/friends/delete").set('Authorization', `Bearer ${token}`).send({ friendEmail: 'katja.zalokar@gmail.com' });
+            let response = await request(app).delete("/api/users/friends/delete").set('Authorization', `Bearer ${token}`).send({ friendEmail: 'katja.zalokar@gmail.com', reverseNumbers: false });
             let responseBody = response.body;
 
             // Assert
@@ -610,6 +610,41 @@ describe('api/users/friends', function () {
         it('wrong token - /api/users/friends', async function () {
             // Act
             let response = await request(app).get("/api/users/friends").set('Authorization', `Bearer asd${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.name).to.equal("JsonWebTokenError");
+        });
+    });
+    describe('GET', async function () {
+        it('should get all users except the one requesting this endpoint - /api/users/all', async function () {
+            // Act
+            let response = await request(app).get("/api/users/all").set('Authorization', `Bearer ${token}`);
+            let responseBody = response.body;
+
+            // Assert
+            expect(responseBody).not.to.equal(null);
+            expect(response.status).to.equal(200);
+            expect(responseBody.users.length).to.equal(2);
+        });
+        it('no token - /api/users/all', async function () {
+            // Act
+            let response = await request(app).get("/api/users/all");
+            let responseBody = response.body;
+
+            // Assert
+            expect(response.status).to.equal(200);
+            expect(responseBody).not.to.equal(null);
+            expect(responseBody.error).not.to.equal(null);
+            expect(responseBody.error.message).not.to.equal(null);
+            expect(responseBody.error.message).to.equal("No token specified.");
+        });
+        it('wrong token - /api/users/all', async function () {
+            // Act
+            let response = await request(app).get("/api/users/all").set('Authorization', `Bearer asd${token}`);
             let responseBody = response.body;
 
             // Assert

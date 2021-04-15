@@ -10,6 +10,7 @@ const {
     getFriends,
     addFriend,
     deleteFriendship,
+    getAllUsers,
     confirmFriendship } = require('../database/sql');
 import { IUserRepository } from '../interfaces/IUserRepository';
 
@@ -140,9 +141,9 @@ export default class UserRepository implements IUserRepository {
         });
     }
 
-    deleteFriendship(userId: number, friendId: number) {
+    deleteFriendship(userId: number, friendId: number, reverseNumbers: boolean) {
         return new Promise((resolve, reject) => {
-            this.db.query(deleteFriendship(userId, friendId), (error, result) => {
+            this.db.query(deleteFriendship(userId, friendId, reverseNumbers), (error, result) => {
                 if (error) {
                     console.log(`Error deleting friendships for user with id ${userId}`);
                     return reject(error);
@@ -157,6 +158,18 @@ export default class UserRepository implements IUserRepository {
             this.db.query(confirmFriendship(friendshipId, userId, friendId), (error, result) => {
                 if (error) {
                     console.log(`Error confirming friendships`);
+                    return reject(error);
+                }
+                resolve(result);
+            });
+        });
+    }
+
+    getAllUsers(id: number) {
+        return new Promise((resolve, reject) => {
+            this.db.query(getAllUsers(id), (error, result) => {
+                if (error) {
+                    console.log(`Error getting users`);
                     return reject(error);
                 }
                 resolve(result);

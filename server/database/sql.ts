@@ -82,7 +82,6 @@ const getExerciseId = (exerciseName: string): string => {
     return `select id from exercises where name = '${exerciseName}'`;
 }
 
-
 const getFriends = (id: number): string => {
     return `select f.id as friendshipId, f.user_id as user, f.friend_id as friendId, fc.confirmed, u.email as friendsEmail, u.first_name as firstName, u.last_name as lastName
     from friendships f, friendship_confirmations fc, users u 
@@ -96,7 +95,11 @@ const addFriend = (userId: number, friendId: number): string => {
     return `insert into friendships(user_id, friend_id) values (${userId},${friendId}); insert into friendship_confirmations (friendship_id, confirmed) values(LAST_INSERT_ID(), false);`;
 };
 
-const deleteFriendship = (userId: number, friendId: number): string => {
+const deleteFriendship = (userId: number, friendId: number, reverseNumbers: boolean): string => {
+    if (reverseNumbers) {
+        return `delete from friendship_confirmations where friendship_id = (select id from friendships where user_id=${friendId} and friend_id=${userId});
+        delete from friendships where user_id=${friendId} and friend_id=${userId}`;
+    }
     return `delete from friendship_confirmations where friendship_id = (select id from friendships where user_id=${userId} and friend_id=${friendId});
             delete from friendships where user_id=${userId} and friend_id=${friendId}`;
 };
@@ -113,6 +116,11 @@ const getFriendship = (friendshipId: number): string => {
 
 const getFriendshipByMetaData = (userId: number, friendId: number): string => {
     return `select count(*) as number from friendships where (user_id=${userId} and friend_id = ${friendId}) or (user_id=${friendId} and friend_id = ${userId})`;
+};
+
+const getAllUsers = (id: number): string => {
+    return `SET CHARACTER SET 'utf8';
+            select u.email, u.first_name as firstName, u.last_name as lastName from users u where id != ${id}`;
 };
 
 export = {
@@ -136,5 +144,6 @@ export = {
     deleteFriendship,
     confirmFriendship,
     getFriendship,
-    getFriendshipByMetaData
+    getFriendshipByMetaData,
+    getAllUsers
 };

@@ -6,7 +6,8 @@ import {
     userOnCreate,
     userOnLogin,
     friendOnAddOrEditSchema,
-    friendshipConfirmationSchema
+    friendshipConfirmationSchema,
+    friendDeleteSchema
 } from './userValidationSchema';
 
 const validate = (schema: any, req, res, next) => {
@@ -54,6 +55,10 @@ const validateFriendshipConfirmationSchema = (req, res, next) => {
     validate(friendshipConfirmationSchema, req, res, next);
 }
 
+const validateFriendDelete = (req, res, next) => {
+    validate(friendDeleteSchema, req, res, next);
+}
+
 export {
     validateDeleteExerciseProgressWithIdSchema,
     validateUpdateExerciseProgressSchema,
@@ -62,5 +67,6 @@ export {
     validateUserOnCreate,
     validateUserOnLogin,
     validateFriendAddOrEdit,
-    validateFriendshipConfirmationSchema
+    validateFriendshipConfirmationSchema,
+    validateFriendDelete
 }

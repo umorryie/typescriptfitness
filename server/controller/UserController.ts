@@ -21,6 +21,21 @@ const getUser = async (req: Request, res: Response) => {
     }
 }
 
+const getAllUsers = async (req: Request, res: Response) => {
+    const { userId } = req.body;
+    try {
+        const users: any = await userRepository.getAllUsers(userId);
+
+        if (users && users.length >= 0) {
+            return res.status(200).json({ users: users[1] });
+        } else {
+            return res.status(200).json({ error: { message: 'There was an error retrieving users.' } })
+        }
+    } catch (error) {
+        res.status(200).json({ error });
+    }
+}
+
 const postUser = async (req: Request, res: Response) => {
     const { userEmail, password, repassword, firstName, lastName } = req.body;
 
@@ -39,7 +54,6 @@ const postUser = async (req: Request, res: Response) => {
         } else {
             res.status(200).json({ error: { message: 'User was not inserted!' } });
         }
-        //res.status(202).json(result);
     } catch (error) {
         res.status(200).json({ error });
     }
@@ -194,10 +208,10 @@ const addFriends = async (req: Request, res: Response) => {
 };
 
 const deleteFriends = async (req: Request, res: Response) => {
-    const { userId, friendId } = req.body;
+    const { userId, friendId, reverseNumbers } = req.body;
 
     try {
-        const result: any = await userRepository.deleteFriendship(userId, friendId);
+        const result: any = await userRepository.deleteFriendship(userId, friendId, reverseNumbers);
 
         if (result && result.length === 2 && result[0].affectedRows === 1 && result[1].affectedRows === 1) {
             res.status(200).json({ message: 'Friendship deleted.' });
@@ -235,5 +249,6 @@ export = {
     getFriends,
     addFriends,
     deleteFriends,
-    confirmFriendship
+    confirmFriendship,
+    getAllUsers
 };

@@ -7,7 +7,8 @@ import {
     validateUserOnCreate,
     validateUserOnLogin,
     validateFriendAddOrEdit,
-    validateFriendshipConfirmationSchema
+    validateFriendshipConfirmationSchema,
+    validateFriendDelete
 } from '../validations/userControllerValidations';
 const { validateFriendConfirmationLegality } = require('../validations/validateFriendConfirmationLegality');
 const userRouter = express.Router();
@@ -20,7 +21,8 @@ const { getUser,
     getFriends,
     addFriends,
     deleteFriends,
-    confirmFriendship } = require('../controller/UserController');
+    confirmFriendship,
+    getAllUsers } = require('../controller/UserController');
 const { validateUserByBody, validateFriend } = require('../validations/validateUser');
 const { validateExercise } = require('../validations/validateExercise');
 const { verifyToken } = require('../auth/tokenAuth');
@@ -33,6 +35,7 @@ userRouter.post('/user/login', validateUserOnLogin, login);
 
 // user progress data 
 userRouter.get('/user/getUser', [verifyToken, validateUserByBody, validateUserEmailSchema], getUser);
+userRouter.get('/all', [verifyToken, validateUserByBody, validateUserEmailSchema], getAllUsers);
 userRouter.post('/user/postExerciseProgress', [verifyToken, validateUserByBody, validateExercise, validatePostExerciseProgressSchema], postExerciseProgress);
 userRouter.put('/user/update/exerciseProgress', [verifyToken, validateUserByBody, validateUpdateExerciseProgressSchema], updateExerciseProgress);
 userRouter.delete('/user/delete/exerciseProgress', [verifyToken, validateUserByBody, validateDeleteExerciseProgressWithIdSchema], deleteExerciseProgressWithId);
@@ -40,7 +43,7 @@ userRouter.delete('/user/delete/exerciseProgress', [verifyToken, validateUserByB
 // friendships
 userRouter.get('/friends', [verifyToken, validateUserByBody, validateUserEmailSchema], getFriends);
 userRouter.post('/friends/add', [verifyToken, validateUserByBody, validateFriend, validateAddingFriendLegality, validateFriendAddOrEdit], addFriends);
-userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend, validateFriendAddOrEdit], deleteFriends);
+userRouter.delete('/friends/delete', [verifyToken, validateUserByBody, validateFriend, validateFriendDelete], deleteFriends);
 
 // friendships confirmations
 userRouter.put('/friends/confirmation', [verifyToken, validateUserByBody, validateFriendshipConfirmationSchema, validateFriendConfirmationLegality], confirmFriendship);
