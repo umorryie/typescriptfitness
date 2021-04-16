@@ -7,7 +7,7 @@ const {
 } = require('./sql');
 
 const getExercises = () => {
-    const exercises = fs.readFileSync('../../server/exercises.json');
+    const exercises = fs.readFileSync(path.join(__dirname, '../../server/exercises.json'));
     const jsonExercises = JSON.parse(exercises);
     return Object.keys(jsonExercises);
 }
