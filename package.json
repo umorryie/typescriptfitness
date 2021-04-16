@@ -8,6 +8,7 @@
     "start": "node dist/server.js",
     "tsc": "tsc",
     "build": "npm install && npm run tsc",
+    "dev": "npm run tsc && node dist/server.js",
     "resetTestDatabase": "tsc && node dist/tests/resetTestDatabase.js"
   },
   "keywords": [],
