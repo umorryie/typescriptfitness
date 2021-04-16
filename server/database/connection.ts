@@ -20,11 +20,7 @@ if (process.env.TEST === "test") {
         password: config.password,
         host: config.host,
         port: config.port,
-        multipleStatements: true,
-        connectionLimit : 1000,
-        connectTimeout  : 60 * 60 * 1000,
-        acquireTimeout  : 60 * 60 * 1000,
-        timeout         : 60 * 60 * 1000,
+        multipleStatements: true
         // ssl: true
     });
 }
