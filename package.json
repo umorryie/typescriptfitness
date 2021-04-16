@@ -5,7 +5,9 @@
   "main": "dist/server.js",
   "scripts": {
     "test": "npm run resetTestDatabase && cross-env TEST=test mocha -r ts-node/register server/tests/**/*.test.ts --exit",
-    "start": "tsc && node dist/server.js",
+    "start": "node dist/server.js",
+    "tsc": "tsc",
+    "build": "npm install && npm run tsc",
     "resetTestDatabase": "tsc && node dist/tests/resetTestDatabase.js"
   },
   "keywords": [],
